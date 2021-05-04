@@ -1,6 +1,8 @@
 package myAdapter;
- 
-public interface HList {
+
+import myAdapter.HCollection;
+
+public interface HList extends HCollection {
 
     void add(int index, Object Element) throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException, IndexOutOfBoundsException;
 

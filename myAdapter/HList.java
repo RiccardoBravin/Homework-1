@@ -1,5 +1,5 @@
 package myAdapter;
-
+ 
 public interface HList {
 
     void add(int index, Object Element) throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException, IndexOutOfBoundsException;
@@ -42,13 +42,13 @@ public interface HList {
 
     boolean retainAll(HCollection c) throws UnsupportedOperationException, ClassCastException, NullPointerException;
 
-    object set(int index, Object element) throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException, IndexOutOfBoundsException;
+    Object set(int index, Object element) throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException, IndexOutOfBoundsException;
 
     int size();
 
     HList subList(int fromIndex, int toIndex) throws IndexOutOfBoundsException;
 
-    object[] toArray();
+    Object[] toArray();
 
     Object[] toArray(Object[] a) throws ArrayStoreException, NullPointerException;
 }

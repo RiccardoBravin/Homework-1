@@ -47,7 +47,7 @@ public interface HMap {
          * This ensures that e1.equals(e2) implies that e1.hashCode()==e2.hashCode() for any two Entries e1 and e2, as required by the general contract of Object.hashCode.
          * @return
          */
-        int hasCode();
+        int hashCode();
 
         /**
          * * Replaces the value corresponding to this entry with the specified value (optional operation). (Writes through to the map.) The behavior of this call is undefined if the mapping has already been removed from the map (by the iterator's remove operation).

@@ -29,5 +29,5 @@ public interface HSet extends HCollection{
 
     Object[] toArray();
 
-    Object[] toArray(Object [] a) throws ArrayStoreException, NullPointerException;
+    Object[] toArray(Object[] a) throws ArrayStoreException, NullPointerException;
 }

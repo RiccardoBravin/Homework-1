@@ -2,23 +2,21 @@ package myAdapter;
 
 import java.util.Hashtable;
 
-public class MapAdapter implements HMap{
+public class MapAdapter {
     
-    private Hashtable map;
+    private Hashtable ht;
 
     public MapAdapter(){
-        map = new Hashtable();
+        ht = new Hashtable();
     }
 
-    MapAdapter(int initialCapacity){
-        map = new Hashtable(initialCapacity);
+    public MapAdapter(int initialCapacity){
+        ht = new Hashtable(initialCapacity);
     }
 
-    
-
-
-
-
+    public boolean isEmpty(){
+        return ht.isEmpty();
+    }
 
 
 }

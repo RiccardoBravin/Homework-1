@@ -54,20 +54,74 @@ public interface HMap {
      */
     Object get(Object key) throws ClassCastException, NullPointerException;
 
-    
+    /**
+     * Returns the hash code value for this map. The hash code of a map is defined to be the sum of the hashCodes of each entry in the map's entrySet view. This ensures that t1.equals(t2) implies that t1.hashCode()==t2.hashCode() for any two maps t1 and t2, as required by the general contract of Object.hashCode.
+     * 
+     * @return the hash code value for this map
+     */
     int hashCode();
 
+    /**
+     * Returns true if this map contains no key-value mappings.
+     * 
+     * @return true if this map contains no key-value mappings.
+     */
     boolean isEmpty();
 
+    /**
+     * Returns a set view of the keys contained in this map. The set is backed by the map, so changes to the map are reflected in the set, and vice-versa. If the map is modified while an iteration over the set is in progress, the results of the iteration are undefined. The set supports element removal, which removes the corresponding mapping from the map, via the Iterator.remove, Set.remove, removeAll retainAll, and clear operations. It does not support the add or addAll operations.
+     * 
+     * @return a set view of the keys contained in this map.
+     */
     Set keySet();
 
+    /**
+     * Associates the specified value with the specified key in this map (optional operation). If the map previously contained a mapping for this key, the old value is replaced by the specified value. (A map m is said to contain a mapping for a key k if and only if m.containsKey(k) would return true.))
+     * 
+     * @param key - key with which the specified value is to be associated.
+     * @param value - value to be associated with the specified key.
+     * @return previous value associated with specified key, or null if there was no mapping for key. A null return can also indicate that the map previously associated null with the specified key, if the implementation supports null values.
+     * @throws UnsupportedOperationException if the put operation is not supported by this map.
+     * @throws ClassCastException if the class of the specified key or value prevents it from being stored in this map.
+     * @throws IllegalArgumentException if some aspect of this key or value prevents it from being stored in this map.
+     * @throws NullPointerException this map does not permit null keys or values, and the specified key or value is null.
+     */
     Object put(Object key, Object value) throws UnsupportedOperationException, ClassCastException, IllegalArgumentException, NullPointerException;
 
+    /**
+     * Copies all of the mappings from the specified map to this map (optional operation). The effect of this call is equivalent to that of calling put(k, v) on this map once for each mapping from key k to value v in the specified map. The behavior of this operation is unspecified if the specified map is modified while the operation is in progress.
+     * 
+     * @param t - Mappings to be stored in this map.
+     * @throws UnsupportedOperationException if the putAll method is not supported by this map.
+     * @throws ClassCastException if the class of a key or value in the specified map prevents it from being stored in this map.
+     * @throws IllegalArgumentException some aspect of a key or value in the specified map prevents it from being stored in this map.
+     * @throws NullPointerException the specified map is null, or if this map does not permit null keys or values, and the specified map contains null keys or values.
+     */
     void putAll(Map t) throws UnsupportedOperationException, ClassCastException, IllegalArgumentException, NullPointerException;
 
+    /**
+     * Removes the mapping for this key from this map if it is present (optional operation). More formally, if this map contains a mapping from key k to value v such that (key==null ? k==null : key.equals(k)), that mapping is removed. (The map can contain at most one such mapping.)
+     * Returns the value to which the map previously associated the key, or null if the map contained no mapping for this key. (A null return can also indicate that the map previously associated null with the specified key if the implementation supports null values.) The map will not contain a mapping for the specified key once the call returns.
+     * 
+     * @param key  - key whose mapping is to be removed from the map.
+     * @return previous value associated with specified key, or null if there was no mapping for key.
+     * @throws ClassCastException if the key is of an inappropriate type for this map (optional).
+     * @throws NullPointerException if the key is null and this map does not not permit null keys (optional).
+     * @throws UnsupportedOperationException if the remove method is not supported by this map.
+     */
     Object remove(Object key) throws ClassCastException, NullPointerException, UnsupportedOperationException;
 
+    /**
+     * Returns the number of key-value mappings in this map. If the map contains more than Integer.MAX_VALUE elements, returns Integer.MAX_VALUE.
+     * 
+     * @return the number of key-value mappings in this map.
+     */
     int size();
 
+    /**
+     * Returns a collection view of the values contained in this map. The collection is backed by the map, so changes to the map are reflected in the collection, and vice-versa. If the map is modified while an iteration over the collection is in progress, the results of the iteration are undefined. The collection supports element removal, which removes the corresponding mapping from the map, via the Iterator.remove, Collection.remove, removeAll, retainAll and clear operations. It does not support the add or addAll operations.
+     * 
+     * @return a collection view of the values contained in this map.
+     */
     Collection values();
 }

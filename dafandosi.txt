@@ -1,0 +1,1 @@
+Del file j2mecldc posso utilizzare tutti i metodi e con quelli devo implementare list e map di j2se 1.4.2

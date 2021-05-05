@@ -1,4 +1,4 @@
-package myAdapter;
+
 
 import java.util.Hashtable;
 
@@ -22,8 +22,10 @@ public class MapAdapter implements HMap {
         }
 
         public boolean equals(Object o){
-            
-            return (o instanceof HEntry) && (this.getKey()==null ? o.getKey()==null : this.getKey().equals(o.getKey()))  && (this.getValue()==null ? o.getValue()==null : this.getValue().equals(o.getValue())) ;
+            if(o instanceof HEntry){
+                return (this.getKey()==null ? ((HEntry)o).getKey()==null : this.getKey().equals(((HEntry)o).getKey()))  && (this.getValue()==null ? ((HEntry)o).getValue()==null : this.getValue().equals(((HEntry)o).getValue())) ;
+            }
+            return false;
         }
 
         public Object getKey(){
@@ -81,14 +83,23 @@ public class MapAdapter implements HMap {
 
     public HSet entrySet(){
         //... to do ...
+        return null;
     }
 
     public boolean equals(Object o){
-        return this.entrySet().equals(o.entrySet());
+        if(o instanceof HMap)
+            return this.entrySet().equals(((HMap)o).entrySet());
+        return false;
+    }
+
+    public Object get(Object key) throws ClassCastException, NullPointerException{
+        //da vedere
+        return null;
     }
 
     public int hashCode(){
         //fa fatto l'hashcode di ogni entry della mappa
+        return 0;
     }
 
     public boolean isEmpty(){
@@ -97,6 +108,28 @@ public class MapAdapter implements HMap {
 
     public HSet keySet(){
         // ... to do ...
+        return null;
+    }
+
+    public Object put(Object key, Object value) throws UnsupportedOperationException, ClassCastException, IllegalArgumentException, NullPointerException{
+        // ... to do ...
+        return null;
+    }
+
+    public void putAll(HMap t) throws UnsupportedOperationException, ClassCastException, IllegalArgumentException, NullPointerException{
+
+    }
+
+    public Object remove(Object key) throws ClassCastException, NullPointerException, UnsupportedOperationException{
+        return null;
+    }
+
+    public int size(){
+        return 0;
+    }
+
+    public HCollection values(){
+        return null;
     }
 
 

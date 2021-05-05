@@ -1,5 +1,6 @@
 //package myAdapter;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class MapAdapter implements HMap {
@@ -64,8 +65,9 @@ public class MapAdapter implements HMap {
         ht = new Hashtable(initialCapacity);
     }
 
-    public MapAdapter(HMap map){
-        //... to do ...
+    public MapAdapter(HMap map) throws NullPointerException{
+        ht = new Hashtable(map.size());
+        this.putAll(map);
     }
 
     //Methods
@@ -83,8 +85,17 @@ public class MapAdapter implements HMap {
     }
 
     public HSet entrySet(){
-        //... to do ...
-        return null;
+
+        Enumeration k = ht.keys();
+        Enumeration e = ht.elements();
+
+        HSet ret = new SetAdapter();
+                
+        while(k.hasMoreElements()){
+            ret.add(new EntryAdapter(k.nextElement(), e.nextElement()));
+        }
+
+        return ret;
     }
 
     public boolean equals(Object o){
@@ -96,9 +107,13 @@ public class MapAdapter implements HMap {
     }
 
     public int hashCode(){
-        //va fatto l'hashcode di ogni entry della mappa
-        //serve entrySet
-        return 0;
+        int sum = 0;
+        HIterator elem = this.entrySet().iterator();
+
+        while(elem.hasNext()){
+            sum += elem.next().hashCode();
+        }
+        return sum;
     }
 
     public boolean isEmpty(){
@@ -106,32 +121,51 @@ public class MapAdapter implements HMap {
     }
 
     public HSet keySet(){
-        // ... to do ...
-        //serve SetAdapter
-        return null;
+
+        Enumeration key = ht.keys();
+        
+        HSet set = new SetAdapter();
+
+        while(key.hasMoreElements()){
+            set.add(key.nextElement());
+        }
+
+        return set;
     }
 
-    public Object put(Object key, Object value) throws UnsupportedOperationException, ClassCastException, IllegalArgumentException, NullPointerException{
+    public Object put(Object key, Object value) throws NullPointerException{
         
         Object aux = ht.remove(key);
         ht.put(key, value);
         return aux;
     }
 
-    public void putAll(HMap t) throws UnsupportedOperationException, ClassCastException, IllegalArgumentException, NullPointerException{
+    public void putAll(HMap t) throws NullPointerException{
+        HIterator elems = t.entrySet().iterator();
 
+        while(elems.hasNext()){
+            HEntry e = (HEntry)elems.next();
+            this.ht.put(e.getKey(), e.getValue());
+        }
     }    
 
-    public Object remove(Object key) throws ClassCastException, NullPointerException, UnsupportedOperationException{
-        return null;
+    public Object remove(Object key){
+        return ht.remove(key);
     }
 
     public int size(){
-        return 0;
+        return ht.size();
     }
 
     public HCollection values(){
-        return null;
+        
+        HCollection coll = new CollectionAdapter(); 
+        Enumeration aux = ht.elements();
+        while(aux.hasMoreElements()){
+            coll.add(aux.nextElement());
+        }
+        
+        return coll;
     }
 
 }

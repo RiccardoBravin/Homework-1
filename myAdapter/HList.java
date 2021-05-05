@@ -94,8 +94,9 @@ public interface HList extends HCollection {
      * 
      * @param index index of element to return.
      * @return the element at the specified position in this list.
+     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= size()).
      */
-    Object get(int index);
+    Object get(int index) throws IndexOutOfBoundsException;
 
     /**
      * Returns the hash code value for this list. The hash code of a list is defined to be the result of the following calculation:

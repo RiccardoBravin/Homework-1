@@ -6,9 +6,11 @@ import org.junit.*;
 
 
 public class MapTester {
+    
     @Test
     public void constructorTester(){
-        //System.out.println("coiasda");
-        assert(true == true);
+        
     }    
+
+    
 }

@@ -91,12 +91,13 @@ public class MapAdapter implements HMap {
         return this.entrySet().equals(((HMap)o).entrySet());
     }
 
-    public Object get(Object key) throws ClassCastException, NullPointerException{
-        return null;
+    public Object get(Object key){
+        return ht.get(key);
     }
 
     public int hashCode(){
-        //fa fatto l'hashcode di ogni entry della mappa
+        //va fatto l'hashcode di ogni entry della mappa
+        //serve entrySet
         return 0;
     }
 
@@ -106,11 +107,15 @@ public class MapAdapter implements HMap {
 
     public HSet keySet(){
         // ... to do ...
+        //serve SetAdapter
         return null;
     }
 
     public Object put(Object key, Object value) throws UnsupportedOperationException, ClassCastException, IllegalArgumentException, NullPointerException{
-        return null;
+        
+        Object aux = ht.remove(key);
+        ht.put(key, value);
+        return aux;
     }
 
     public void putAll(HMap t) throws UnsupportedOperationException, ClassCastException, IllegalArgumentException, NullPointerException{

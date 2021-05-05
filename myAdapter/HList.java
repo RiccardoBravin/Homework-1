@@ -1,4 +1,4 @@
-package myAdapter;
+//package myAdapter;
 
 public interface HList extends HCollection {
 

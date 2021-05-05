@@ -61,7 +61,7 @@ public class MapAdapter implements HMap {
         ht = new Hashtable(initialCapacity);
     }
 
-    public MapAdapter(MapAdapter map){
+    public MapAdapter(HMap map){
         //... to do ...
     }
 

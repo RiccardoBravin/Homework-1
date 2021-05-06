@@ -61,7 +61,7 @@ public class MapAdapter implements HMap {
         ht = new Hashtable();
     }
 
-    public MapAdapter(int initialCapacity){
+    public MapAdapter(int initialCapacity) throws IllegalArgumentException{
         ht = new Hashtable(initialCapacity);
     }
 
@@ -141,6 +141,9 @@ public class MapAdapter implements HMap {
     }
 
     public void putAll(HMap t) throws NullPointerException{
+        
+        if(t == null) throw new NullPointerException("La mappa passata è null, impossibile aggiungere elementi");
+
         HIterator elems = t.entrySet().iterator();
 
         while(elems.hasNext()){

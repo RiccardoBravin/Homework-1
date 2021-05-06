@@ -18,7 +18,10 @@ public class SetAdapter implements HSet{
         return true;
     }
 
-    public boolean addAll(HCollection c){
+    public boolean addAll(HCollection c) throws NullPointerException{
+
+        if(c == null) throw new NullPointerException("Collection null");
+
         HIterator iter = c.iterator();
         boolean changed = false;
 
@@ -39,7 +42,9 @@ public class SetAdapter implements HSet{
         return v.contains(o);
     }
     
-    public boolean containsAll(HCollection c){
+    public boolean containsAll(HCollection c) throws NullPointerException{
+        if(c == null) throw new NullPointerException("Collection null");
+
         HIterator iter =c.iterator();
         
         while(iter.hasNext()){
@@ -69,57 +74,57 @@ public class SetAdapter implements HSet{
     }
 
     public HIterator iterator(){
-        return new IteratorAdapter();
+        return new IteratorAdapter(v);
     }
 
     //potrebbe essere necessario farlo diventare public per testare
-    protected class IteratorAdapter implements HIterator{
-        int index;
-        boolean nexted = false;
+    //protected class IteratorAdapter implements HIterator{
+    //    private int index;
+    //    private boolean nexted = false;
+    //
+    //    public IteratorAdapter(){
+    //        index = 0;
+    //    }
+    //    public IteratorAdapter(int i) throws IllegalArgumentException{
+    //        if(i < v.size())
+    //            throw new IllegalArgumentException();
+    //        i = index;
+    //    }
+    //
+    //    public boolean hasNext(){
+    //        return index < v.size();
+    //    }
+    //
+    //    public Object next() throws NoSuchElementException{
+    //        if(!this.hasNext()){
+    //            throw new NoSuchElementException();
+    //        }
+    //        
+    //        nexted = true;
+    //        index++;
+    //        return v.get(index - 1);
+    //            
+    //    }
+    //
+    //    public void remove() throws IllegalStateException{
+    //        if(!nexted){
+    //            throw new IllegalStateException();
+    //        }
+    //        nexted = false;
+    //        index--;
+    //        v.removeElementAt(index);
+    //        
+    //    }
+    //}
 
-        public IteratorAdapter(){
-            index = 0;
-        }
-        public IteratorAdapter(int i) throws IllegalArgumentException{
-            if(i < v.size())
-                throw new IllegalArgumentException();
-            i = index;
-        }
-
-        public boolean hasNext(){
-            return index < v.size();
-        }
-
-        public Object next() throws NoSuchElementException{
-            if(!this.hasNext()){
-                throw new NoSuchElementException();
-            }
-            
-            nexted = true;
-            index++;
-            return v.get(index - 1);
-                
-        }
-
-        public void remove() throws IllegalStateException{
-            if(!nexted){
-                throw new IllegalStateException();
-            }
-            nexted = false;
-            index--;
-            v.removeElementAt(index);
-            
-        }
-
-    }
 
 
     public boolean remove(Object o){
         return v.removeElement(o);
     }
 
-    public boolean removeAll(HCollection c){  //BISOGNA CONTROLLARE CHE MI PASSI SEMPRE UNA HCOLLECTION E CHE JAVA NON PERMETTA DI PASSARE ALTRO ALTRIMENTI BISOGNA FARE UN THROW
-
+    public boolean removeAll(HCollection c) throws NullPointerException{  //BISOGNA CONTROLLARE CHE MI PASSI SEMPRE UNA HCOLLECTION E CHE JAVA NON PERMETTA DI PASSARE ALTRO ALTRIMENTI BISOGNA FARE UN THROW
+        if(c == null) throw new NullPointerException("Collection null");
         HIterator iter = c.iterator();
         boolean changed = false;
         while(iter.hasNext()){
@@ -132,7 +137,9 @@ public class SetAdapter implements HSet{
 
     }
 
-    public boolean retainAll(HCollection c) throws UnsupportedOperationException, ClassCastException, NullPointerException{ //STESSA ROBA DI SOPRA
+    public boolean retainAll(HCollection c) throws NullPointerException{ //STESSA ROBA DI SOPRA
+
+        if(c == null) throw new NullPointerException("Collection null");
 
         HIterator iter = this.iterator();
         boolean changed = false;
@@ -154,17 +161,20 @@ public class SetAdapter implements HSet{
     public Object[] toArray(){
         Object[] arr = new Object[this.size()];
         for(int i = 0; i < v.size(); i++){
-            arr[i] = v.get(i);
+            arr[i] = v.elementAt(i);
         }
         return arr;
     }
 
-    public Object[] toArray(Object[] a){
+    public Object[] toArray(Object[] a) throws NullPointerException{
         
+        if(a == null) throw new NullPointerException("Array null");
+
         if(a.length >= this.size()){
             for(int i = 0; i < v.size(); i++){
-                a[i] = v.get(i);
+                a[i] = v.elementAt(i);
             }
+            return a;
         }
         return this.toArray();
     }

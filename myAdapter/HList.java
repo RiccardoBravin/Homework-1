@@ -45,7 +45,7 @@ public interface HList extends HCollection {
      * 
      * @param index index at which to insert first element from the specified collection.
      * @param c elements to be inserted into this list.
-     * @return
+     * @return true if this list changed as a result of the call.
      * @throws UnsupportedOperationException if the addAll method is not supported by this list.
      * @throws ClassCastException if the class of one of elements of the specified collection prevents it from being added to this list.
      * @throws NullPointerException if the specified collection contains one or more null elements and this list does not support null elements, or if the specified collection is null.
@@ -112,7 +112,7 @@ public interface HList extends HCollection {
      * 
      * @return the hash code value for this list.
      */
-    int hasCode();
+    int hashCode();
 
     /**
      * Returns the index in this list of the first occurrence of the specified element, or -1 if this list does not contain this element. More formally, returns the lowest index i such that (o==null ? get(i)==null : o.equals(get(i))), or -1 if there is no such index.
@@ -169,8 +169,10 @@ public interface HList extends HCollection {
      * 
      * @param index the index of the element to removed.
      * @return the element previously at the specified position.
+     * @throws ClassCastException if the type of the specified element is incompatible with this list (optional).
+     * @throws NullPointerException if the specified element is null and this list does not support null elements (optional).
      */
-    Object remove(int index);
+    Object remove(int index) throws ClassCastException, NullPointerException;
 
     /**
      * Removes the first occurrence in this list of the specified element (optional operation). If this list does not contain the element, it is unchanged. More formally, removes the element with the lowest index i such that (o==null ? get(i)==null : o.equals(get(i))) (if such an element exists).
@@ -212,7 +214,7 @@ public interface HList extends HCollection {
      * 
      * @param index index of element to replace.
      * @param element element to be stored at the specified position.
-     * @return
+     * @return the element previously at the specified position.
      * @throws UnsupportedOperationException if the set method is not supported by this list.
      * @throws ClassCastException if the class of the specified element prevents it from being added to this list.
      * @throws NullPointerException if the specified element is null and this list does not support null elements.

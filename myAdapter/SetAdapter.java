@@ -151,5 +151,23 @@ public class SetAdapter implements HSet{
         return v.size();
     }
 
+    public Object[] toArray(){
+        Object[] arr = new Object[this.size()];
+        for(int i = 0; i < v.size(); i++){
+            arr[i] = v.get(i);
+        }
+        return arr;
+    }
+
+    public Object[] toArray(Object[] a){
+        
+        if(a.length >= this.size()){
+            for(int i = 0; i < v.size(); i++){
+                a[i] = v.get(i);
+            }
+        }
+        return this.toArray();
+    }
+
 
 }

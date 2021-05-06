@@ -142,17 +142,12 @@ public interface HCollection {
 
     /**
      * Returns an array containing all of the elements in this collection; the runtime type of the returned array is that of the specified array. If the collection fits in the specified array, it is returned therein. Otherwise, a new array is allocated with the runtime type of the specified array and the size of this collection.
-     *If this collection fits in the specified array with room to spare (i.e., the array has more elements than this collection), the element in the array immediately following the end of the collection is set to null. This is useful in determining the length of this collection only if the caller knows that this collection does not contain any null elements.)
-     *
-     *If this collection makes any guarantees as to what order its elements are returned by its iterator, this method must return the elements in the same order.
-     *
-     *Like the toArray method, this method acts as bridge between array-based and collection-based APIs. Further, this method allows precise control over the runtime type of the output array, and may, under certain circumstances, be used to save allocation costs
-     *
-     *Suppose l is a List known to contain only strings. The following code can be used to dump the list into a newly allocated array of String:
-     *
-     *  String[] x = (String[]) v.toArray(new String[0]);
-     *
-     *Note that toArray(new Object[0]) is identical in function to toArray().
+     * If this collection fits in the specified array with room to spare (i.e., the array has more elements than this collection), the element in the array immediately following the end of the collection is set to null. This is useful in determining the length of this collection only if the caller knows that this collection does not contain any null elements.)
+     * If this collection makes any guarantees as to what order its elements are returned by its iterator, this method must return the elements in the same order.
+     * Like the toArray method, this method acts as bridge between array-based and collection-based APIs. Further, this method allows precise control over the runtime type of the output array, and may, under certain circumstances, be used to save allocation costs
+     * Suppose l is a List known to contain only strings. The following code can be used to dump the list into a newly allocated array of String:
+     * String[] x = (String[]) v.toArray(new String[0]);
+     * Note that toArray(new Object[0]) is identical in function to toArray().
      * 
      * @param a the array into which the elements of this collection are to be stored, if it is big enough; otherwise, a new array of the same runtime type is allocated for this purpose.
      * @return an array containing the elements of this collection

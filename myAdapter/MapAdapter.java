@@ -25,7 +25,7 @@ public class MapAdapter implements HMap {
         public boolean equals(Object o){
             
             if(o instanceof HEntry){
-                return (this.getKey()==null ? ((HEntry)o).getKey()==null : this.getKey().equals(((HEntry)o).getKey()))  && (this.getValue()==null ? ((HEntry)o).getValue()==null : this.getValue().equals(((HEntry)o).getValue())) ;
+                return (this.getKey() == null ? ((HEntry)o).getKey() == null : this.getKey().equals(((HEntry)o).getKey())) && (this.getValue() == null ? ((HEntry)o).getValue() == null : this.getValue().equals(((HEntry)o).getValue())) ;
             }
             return false;
         }
@@ -166,6 +166,12 @@ public class MapAdapter implements HMap {
         }
         
         return coll;
+    }
+
+
+    //Metodi da eliminare terminati i test
+    public Hashtable getHashtable(){
+        return ht;
     }
 
 }

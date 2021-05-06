@@ -1,3 +1,3 @@
-public class ListAdapter {
+public class ListAdapter implements HList {
     
 }

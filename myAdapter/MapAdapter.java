@@ -42,7 +42,7 @@ public class MapAdapter implements HMap {
             return (this.getKey()==null ? 0 : this.getKey().hashCode()) ^ (this.getValue()==null ? 0 : this.getValue().hashCode());
         }
 
-        public Object setValue(Object value){
+        public Object setValue(Object value) throws NullPointerException{
             
             ht.remove(this.key);
             ht.put(this.key, value);
@@ -159,7 +159,7 @@ public class MapAdapter implements HMap {
 
     public HCollection values(){
         
-        HCollection coll = new CollectionAdapter(); 
+        HCollection coll = new CollectionAdapter(); //CREDO VADA CONTROLLATO SE POSSO RITORNARE SEMPLICEMENTE UNA LISTA DATO CHE IMPLEMENTA COLLECTION
         Enumeration aux = ht.elements();
         while(aux.hasMoreElements()){
             coll.add(aux.nextElement());

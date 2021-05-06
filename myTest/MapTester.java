@@ -9,7 +9,7 @@ public class MapTester {
     
     @Test
     public void constructorTester(){
-        
+        assert(true == false);
     }    
 
     

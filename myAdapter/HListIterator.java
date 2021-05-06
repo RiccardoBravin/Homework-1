@@ -1,4 +1,4 @@
-package myAdapter;
+//package myAdapter;
 
 import java.util.NoSuchElementException;
 
@@ -59,7 +59,9 @@ public interface HListIterator extends HIterator {
     int previousIndex();
 
     /**
-     * Removes from the list the last element that was returned by next or previous (optional operation). This call can only be made once per call to next or previous. It can be made only if ListIterator.add has not been called after the last call to next or previous.
+     * Removes from the list the last element that was returned by next or previous (optional operation). 
+     * This call can only be made once per call to next or previous. 
+     * It can be made only if ListIterator.add has not been called after the last call to next or previous.
      * 
      * @throws UnsupportedOperationException if the remove operation is not supported by this list iterator.
      * @throws IllegalStateException neither next nor previous have been called, or remove or add have been called after the last call to * next or previous.
@@ -67,7 +69,8 @@ public interface HListIterator extends HIterator {
     void remove() throws UnsupportedOperationException, IllegalStateException;
 
     /**
-     * Replaces the last element returned by next or previous with the specified element (optional operation). This call can be made only if neither ListIterator.remove nor ListIterator.add have been called after the last call to next or previous.
+     * Replaces the last element returned by next or previous with the specified element (optional operation). 
+     * This call can be made only if neither ListIterator.remove nor ListIterator.add have been called after the last call to next or previous.
      * 
      * @param o the element with which to replace the last element returned by next or previous.
      * @throws UnsupportedOperationException if the set operation is not supported by this list iterator.

@@ -1,5 +1,6 @@
-package myAdapter;
+//package myAdapter;
 
+import java.util.NoSuchElementException;
 import java.util.Vector;
 
 public class ListAdapter implements HList {
@@ -28,7 +29,7 @@ public class ListAdapter implements HList {
         if(c == null) throw new NullPointerException();
 
         int oldSize = size();
-        Hiterator iter = c.iterator(); 
+        HIterator iter = c.iterator(); 
 
         while(iter.hasNext()){
             add(iter.next());
@@ -45,8 +46,8 @@ public class ListAdapter implements HList {
         HIterator iter = c.iterator();
         int i = 0;
 
-        while(iter.hasNext){
-            add(index + i, c.next());
+        while(iter.hasNext()){
+            add(index + i, iter.next());
             i++;
         }
 
@@ -80,13 +81,14 @@ public class ListAdapter implements HList {
 
     public boolean equals(Object o) {
         if(o == null) return false;
-        if(!o.instanceOf(HList)) return false;
-        if(o.size() != size()) return false;
+        if(!(o instanceof HList)) return false;
+        HList casted = (HList)o;
+        if(casted.size() != vec.size()) return false;
 
-        HIterator OIter = o.iterator();
+        HIterator OIter = casted.iterator();
         HIterator iter = iterator();
         while(iter.hasNext()){
-            if(!iter.next.equals(OIter.next())) return false;
+            if(!iter.next().equals(OIter.next())) return false;
         }
 
         return true;
@@ -129,8 +131,7 @@ public class ListAdapter implements HList {
 
    
     public HIterator iterator() {
-        // TODO Auto-generated method stub
-        return null;
+        return (HIterator)listIterator();
     }
 
    
@@ -140,8 +141,7 @@ public class ListAdapter implements HList {
 
    
     public HListIterator listIterator() {
-        // TODO Auto-generated method stub
-        return null;
+        return new ListIteratorAdapter();
     }
 
    
@@ -218,8 +218,11 @@ public class ListAdapter implements HList {
 
    
     public Object[] toArray() {
-        // TODO Auto-generated method stub
-        return null;
+        Object[] array = new Object[vec.size()];
+        for(int i=0; i<vec.size(); i++){
+            array[i] = vec.elementAt(i);
+        }
+        return array;
     }
 
    
@@ -228,5 +231,78 @@ public class ListAdapter implements HList {
         return null;
     }
 
+
+    public class ListIteratorAdapter implements HListIterator {
+
+        private ListIteratorAdapter(){     //forse protected
+            cursor = 0;
+            indexOfLastObjectReturned = -1;
+            removeUse = false;
+            addUse = false;
+            lastCallIsNext = false;
+        }
+
+        public void add(Object o) {
+            vec.add(cursor, o);
+            addUse = true;
+        }
+
+        public boolean hasNext(){
+            return (cursor <= vec.size());
+        }
+
+        public boolean hasPrevious(){
+            return (cursor > 0);
+        }
+
+        public Object next() throws NoSuchElementException{
+            if(!hasNext()) throw new NoSuchElementException();
+            indexOfLastObjectReturned = cursor;
+            removeUse = false;
+            addUse = false;
+            lastCallIsNext = true;
+            return vec.elementAt(cursor++);
+        }
+
+        public int nextIndex(){
+            return cursor;
+        }
+
+        public Object previous() throws NoSuchElementException{
+            if(!hasPrevious()) throw new NoSuchElementException();
+            indexOfLastObjectReturned = --cursor;
+            removeUse = false;
+            addUse = false;
+            lastCallIsNext = false;
+            return vec.elementAt(cursor);
+        }
+
+        public int previousIndex(){
+            return cursor - 1;
+        }
+
+        public void remove() throws  IllegalStateException {
+            if(removeUse || addUse || indexOfLastObjectReturned==-1) throw new IllegalStateException();
+            vec.remove(indexOfLastObjectReturned);
+            if(lastCallIsNext) cursor--;
+            //se arrivo da next il cursore fa --, se arrivo da previous il cursore sta fermo
+            removeUse = true;
+            
+        }
+
+        public void set(Object o) throws IllegalStateException {
+            if(removeUse || addUse) throw new IllegalStateException();
+            vec.setElementAt(o, indexOfLastObjectReturned);
+        }
+
+        private int cursor;
+        private int indexOfLastObjectReturned;
+        private boolean removeUse;
+        private boolean addUse;
+        private boolean lastCallIsNext;
+
+    }
+
+    
     private Vector vec;
 }

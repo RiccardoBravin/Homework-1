@@ -1,4 +1,4 @@
-package myAdapter;
+//package myAdapter;
 
 public interface HList extends HCollection {
 
@@ -211,7 +211,7 @@ public interface HList extends HCollection {
      * 
      * @param index index of element to replace.
      * @param element element to be stored at the specified position.
-     * @return
+     * @return the element previously at the specified position.
      * @throws UnsupportedOperationException if the set method is not supported by this list.
      * @throws ClassCastException if the class of the specified element prevents it from being added to this list.
      * @throws NullPointerException if the specified element is null and this list does not support null elements.
@@ -234,7 +234,7 @@ public interface HList extends HCollection {
 	        list.subList(from, to).clear();
  
      * Similar idioms may be constructed for indexOf and lastIndexOf, and all of the algorithms in the Collections class can be applied to a subList.
-     *The semantics of the list returned by this method become undefined if the backing list (i.e., this list) is structurally modified in any way other than via the returned list. (Structural modifications are those that change the size of this list, or otherwise perturb it in such a fashion that iterations in progress may yield incorrect results.)
+     * The semantics of the list returned by this method become undefined if the backing list (i.e., this list) is structurally modified in any way other than via the returned list. (Structural modifications are those that change the size of this list, or otherwise perturb it in such a fashion that iterations in progress may yield incorrect results.)
      * 
      * @param fromIndex low endpoint (inclusive) of the subList.
      * @param toIndex high endpoint (exclusive) of the subList.
@@ -246,7 +246,7 @@ public interface HList extends HCollection {
     /**
      * Returns an array containing all of the elements in this list in proper sequence. Obeys the general contract of the Collection.toArray method.
      * 
-     * @returnan array containing all of the elements in this list in proper sequence.
+     * @return an array containing all of the elements in this list in proper sequence.
      */
     Object[] toArray();
 

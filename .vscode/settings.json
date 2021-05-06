@@ -1,0 +1,10 @@
+{
+    "java.project.sourcePaths": [
+        "myTest",
+        "myAdapter"
+    ],
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "C:/Program Files/Java/JUnit/*.jar"
+    ]
+}

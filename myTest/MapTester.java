@@ -175,6 +175,13 @@ public class MapTester {
         assertTrue("Il valore 1 non è stato trovato", map1.containsValue(1));
     }
 
+
+    
+    @Test
+    public void entrySetTest(){
+
+    }
+
     @Test
     public void hashTest(){
         MapAdapter map1 = new MapAdapter();
@@ -187,5 +194,7 @@ public class MapTester {
         map1.put("D", 4);
         map1.put(5, "E");
     }
+
+
     
 }

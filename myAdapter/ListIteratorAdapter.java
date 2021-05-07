@@ -31,7 +31,6 @@ public class ListIteratorAdapter implements HListIterator{
 
     public Object next() throws NoSuchElementException{
         if(!this.hasNext()) throw new NoSuchElementException();
-        nexted = true;
         lastIndex = index;
         return v.elementAt(index++);
     }
@@ -42,7 +41,6 @@ public class ListIteratorAdapter implements HListIterator{
 
     public Object previous() throws NoSuchElementException{
         if(!this.hasPrevious()) throw new NoSuchElementException();
-        nexted = false;
         index--;
         lastIndex = index;
         return v.elementAt(index);

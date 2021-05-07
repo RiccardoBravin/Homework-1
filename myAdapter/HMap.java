@@ -10,7 +10,9 @@
  */
 public interface HMap {
 
-
+    /**
+     * A map entry (key-value pair). The Map.entrySet method returns a collection-view of the map, whose elements are of this class. The only way to obtain a reference to a map entry is from the iterator of this collection-view. These Map.Entry objects are valid only for the duration of the iteration; more formally, the behavior of a map entry is undefined if the backing map has been modified after the entry was returned by the iterator, except through the iterator's own remove operation, or through the setValue operation on a map entry returned by the iterator.
+     */
     public interface HEntry{
         /**
          * Compares the specified object with this entry for equality. Returns true if the given object is also a map entry and the two entries represent the same mapping. More formally, two entries e1 and e2 represent the same mapping if

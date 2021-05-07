@@ -5,6 +5,8 @@ import java.util.Vector;
 public class ListAdapter implements HList {
     private Vector v;
 
+    private int modCount = 0; 
+
     public ListAdapter(){
         v = new Vector();
     }
@@ -130,12 +132,12 @@ public class ListAdapter implements HList {
     }
 
     public HListIterator listIterator(){
-        return new ListIteratorAdapter();
+        return new ListIteratorAdapter(v);
     }
 
     public HListIterator listIterator(int index) throws IndexOutOfBoundsException{
         if((index < 0 || index > v.size())) throw new IndexOutOfBoundsException();
-        return new ListIteratorAdapter(index);
+        return new ListIteratorAdapter(v, index);
     }
 
     public Object remove(int index){
@@ -199,10 +201,9 @@ public class ListAdapter implements HList {
     }
 
     public HList subList(int fromIndex, int toIndex) throws IndexOutOfBoundsException{
+        if(fromIndex > toIndex || fromIndex < 0 || toIndex > v.size()) throw new IndexOutOfBoundsException();
         
-        //TODO
-        
-        return null;
+        return new LimitedListAdapter(fromIndex, toIndex);
     }
 
     public Object[] toArray(){
@@ -228,7 +229,114 @@ public class ListAdapter implements HList {
     public class LimitedListAdapter extends ListAdapter{
         int start;
         int end;
+        int modCheck;
 
+        public LimitedListAdapter(int fromIndex, int toIndex){
+
+            modCheck = modCount;
+            start = fromIndex;
+            end = toIndex;
+        }
+
+        public void add(int index, Object Element) throws IndexOutOfBoundsException, IllegalStateException{
+            if(modCheck != modCount) throw new IllegalStateException("State modified");
+            if(index < 0 || index > this.size()) throw new IndexOutOfBoundsException();
+            super.add(index + start, Element);
+        }
+
+        public boolean add(Object obj) throws IllegalStateException{
+            if(modCheck != modCount) throw new IllegalStateException("State modified");
+            return super.add(obj);
+        }
+
+        public boolean addAll(HCollection c) throws NullPointerException, IllegalStateException{
+            if(modCheck != modCount) throw new IllegalStateException("State modified");
+            return super.addAll(c);
+        }
+
+        public boolean addAll(int index, HCollection c) throws NullPointerException, IndexOutOfBoundsException, IllegalStateException{
+            if(modCheck != modCount) throw new IllegalStateException("State modified");
+            if(index < 0 || index > this.size()) throw new IndexOutOfBoundsException();
+            return super.addAll(index, c);
+        }
+
+        public void clear() throws IllegalStateException{
+            if(modCheck != modCount) throw new IllegalStateException("State modified");
+            for(int i = start; i < end; i++){
+                v.removeElementAt(start);
+            }
+            modCount++;
+
+        }
+
+        public boolean contains(Object o) throws IllegalStateException{
+            if(modCheck != modCount) throw new IllegalStateException("State modified");
+            for(int i = start; i < end; i++){
+                if(v.elementAt(i).equals(o)){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public boolean containsAll(HCollection c) throws NullPointerException, IllegalStateException{
+            if(c == null) throw new NullPointerException("Collection null");
+            if(modCheck != modCount) throw new IllegalStateException("State modified");
+            
+            HIterator elems = c.iterator();
+
+            while(elems.hasNext()){
+                if(!this.contains(elems.next())){
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        public boolean equals(Object o) throws IllegalStateException{
+            if(modCheck != modCount) throw new IllegalStateException("State modified");
+            if(!(o instanceof HList)) return false;
+            if(this.size() !=  ((HList)o).size()) return false;
+    
+            HIterator itero = ((HList)o).iterator();
+            
+            int i = start;
+            while(itero.hasNext()){
+                if(!itero.next().equals(v.elementAt(i))) return false;
+                i++;
+            }
+    
+            return true;
+        }
+
+        public  Object get(int index) throws IndexOutOfBoundsException, IllegalStateException{
+            if(modCheck != modCount) throw new IllegalStateException("State modified");
+            if(index < 0 || index > this.size()) throw new IndexOutOfBoundsException();
+            return super.get(index);
+        }
+
+        public int hashCode() throws IllegalStateException{
+            if(modCheck != modCount) throw new IllegalStateException("State modified");
+            int hashCode = 1;
+            for(int i = start; i < end; i++){
+
+                Object obj = v.elementAt(i);
+                hashCode = 31*hashCode + (obj==null ? 0 : obj.hashCode());
+            }
+
+            return hashCode;
+        }
+
+        public int indexOf(Object o) throws IllegalStateException{
+            if(modCheck != modCount) throw new IllegalStateException("State modified");
+            int ind = v.indexOf(o, start);
+            if(ind < end){
+                return ind;
+            }
+
+            return -1;
+        }
         
     }
     

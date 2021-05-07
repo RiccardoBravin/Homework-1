@@ -17,7 +17,7 @@ public class MapAdapter implements HMap {
         private Object value;
 
 
-        EntryAdapter(Object key, Object value){
+        private EntryAdapter(Object key, Object value){
             this.key = key;
             this.value = value;
         }
@@ -53,6 +53,8 @@ public class MapAdapter implements HMap {
             return aux;
 
         }
+
+
     } 
 
     //Constructors
@@ -84,7 +86,7 @@ public class MapAdapter implements HMap {
         return ht.contains(value);
     }
 
-    public HSet entrySet(){
+    public HSet entrySet(){ //È sbagliato c'è backing solo in un verso
 
         Enumeration k = ht.keys();
         Enumeration e = ht.elements();
@@ -181,4 +183,14 @@ public class MapAdapter implements HMap {
         return ht;
     }
 
+
+
+    public class EntrySet{
+
+    }
+
+
+    public class KeySet{
+        
+    }
 }

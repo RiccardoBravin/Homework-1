@@ -160,9 +160,11 @@ public class MapAdapter implements HMap {
         return ht.size();
     }
 
+
+    //SE VA FATTO IL BACKING NON VA BENE
     public HCollection values(){
         
-        HCollection coll = new CollectionAdapter(); //CREDO VADA CONTROLLATO SE POSSO RITORNARE SEMPLICEMENTE UNA LISTA DATO CHE IMPLEMENTA COLLECTION
+        HCollection coll = new CollectionAdapter(); 
         Enumeration aux = ht.elements();
         while(aux.hasMoreElements()){
             coll.add(aux.nextElement());
@@ -170,6 +172,8 @@ public class MapAdapter implements HMap {
         
         return coll;
     }
+
+
 
 
     //Metodi da eliminare terminati i test

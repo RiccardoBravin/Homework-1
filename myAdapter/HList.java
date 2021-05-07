@@ -170,9 +170,9 @@ public interface HList extends HCollection {
      * @param index the index of the element to removed.
      * @return the element previously at the specified position.
      * @throws ClassCastException if the type of the specified element is incompatible with this list (optional).
-     * @throws NullPointerException if the specified element is null and this list does not support null elements (optional).
+     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= size()).
      */
-    Object remove(int index) throws ClassCastException, NullPointerException;
+    Object remove(int index) throws ClassCastException, IndexOutOfBoundsException;
 
     /**
      * Removes the first occurrence in this list of the specified element (optional operation). If this list does not contain the element, it is unchanged. More formally, removes the element with the lowest index i such that (o==null ? get(i)==null : o.equals(get(i))) (if such an element exists).

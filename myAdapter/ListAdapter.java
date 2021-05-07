@@ -145,7 +145,7 @@ public class ListAdapter implements HList {
             return aux;
         }catch(ArrayIndexOutOfBoundsException aioobe){
             System.out.println(aioobe.getMessage());
-            return null;
+            throw new IndexOutOfBoundsException(aioobe.getMessage());
         }
     }
 
@@ -225,9 +225,12 @@ public class ListAdapter implements HList {
         return this.toArray();
     }
 
+    public class LimitedListAdapter extends ListAdapter{
+        int start;
+        int end;
 
-    
-
+        
+    }
     
 
 

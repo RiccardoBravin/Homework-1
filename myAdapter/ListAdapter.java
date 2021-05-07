@@ -1,5 +1,6 @@
 //package myAdapter;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
@@ -7,12 +8,14 @@ public class ListAdapter implements HList {
 
     public ListAdapter(){
         vec = new Vector();
+        modCount = 0;
     }
-    
+
    
     public void add(int index, Object Element) throws IndexOutOfBoundsException {
         try {
             vec.insertElementAt(Element, index);
+            modCount++;
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new IndexOutOfBoundsException();
         }
@@ -21,6 +24,7 @@ public class ListAdapter implements HList {
    
     public boolean add(Object obj) {
         vec.addElement(obj);
+        modCount++;
         return true;
     }
 
@@ -35,7 +39,12 @@ public class ListAdapter implements HList {
             add(iter.next());
         }
 
-        if(oldSize == vec.size()) return false; else return true;
+        if(oldSize == vec.size()) {
+            return false; 
+        } else {
+            modCount++;
+            return true;
+        }
     }
 
    
@@ -51,12 +60,18 @@ public class ListAdapter implements HList {
             i++;
         }
 
-        if(oldSize == vec.size()) return false; else return true;
+        if(oldSize == vec.size()) {
+            return false; 
+        } else {
+            modCount++;
+            return true;
+        }
     }
 
    
     public void clear() {
         vec.removeAllElements();
+        modCount++;
     }
 
    
@@ -71,7 +86,7 @@ public class ListAdapter implements HList {
         HIterator iter = c.iterator();
 
         while(iter.hasNext()){
-            if(!contains(iter.next())) 
+            if(!this.contains(iter.next())) 
                 return false;
         }
 
@@ -86,7 +101,7 @@ public class ListAdapter implements HList {
         if(casted.size() != vec.size()) return false;
 
         HIterator OIter = casted.iterator();
-        HIterator iter = iterator();
+        HIterator iter = this.iterator();
         while(iter.hasNext()){
             if(!iter.next().equals(OIter.next())) return false;
         }
@@ -104,19 +119,19 @@ public class ListAdapter implements HList {
     }
 
    
-    public int hasCode() {
-        int hasCode = 1;
-        HIterator iter = iterator();
+    public int hashCode() {
+        int hashCode = 1;
+        HIterator iter = this.iterator();
 
         while(iter.hasNext()){
             Object obj = iter.next();
             int increment = 0;
             if(obj != null)
                 increment = obj.hashCode();
-            hasCode = 31*hasCode + increment;
+            hashCode = 31*hashCode + increment;
         }
 
-        return hasCode;
+        return hashCode;
     }
 
    
@@ -146,15 +161,16 @@ public class ListAdapter implements HList {
 
    
     public HListIterator listIterator(int index) throws IndexOutOfBoundsException {
-        // TODO Auto-generated method stub
-        return null;
+        if(index > vec.size()) throw new IndexOutOfBoundsException();
+        return new ListIteratorAdapter(index);
     }
 
    
-    public Object remove(int index) {
+    public Object remove(int index) throws IndexOutOfBoundsException {
             try{
                 Object removed = vec.elementAt(index);
                 vec.removeElementAt(index);
+                modCount++;
                 return removed;
             } catch (ArrayIndexOutOfBoundsException e) {
                 throw new IndexOutOfBoundsException();
@@ -163,7 +179,11 @@ public class ListAdapter implements HList {
 
    
     public boolean remove(Object o) {
-        return vec.removeElement(o);
+        if(vec.remove(o)){
+            modCount++;
+            return true;
+        }
+        return false;
     }
 
    
@@ -176,7 +196,12 @@ public class ListAdapter implements HList {
             vec.remove(iter.next());
         }
 
-        if(oldSize == vec.size()) return false; else return true;
+        if(oldSize == vec.size()) {
+            return false;
+        } else {
+            modCount++;
+            return true;
+        }
     }
 
    
@@ -190,7 +215,12 @@ public class ListAdapter implements HList {
                 i--;
             }
         }
-        if(oldSize == vec.size()) return false; else return true;
+        if(oldSize == vec.size()) {
+            return false;
+        } else {
+            modCount++;
+            return true;
+        }
     }
 
    
@@ -212,8 +242,8 @@ public class ListAdapter implements HList {
 
    
     public HList subList(int fromIndex, int toIndex) throws IndexOutOfBoundsException {
-        // TODO Auto-generated method stub
-        return null;
+        if(fromIndex < 0 || toIndex > vec.size() || fromIndex > toIndex) throw new IndexOutOfBoundsException();
+        return new RangedListAdapter(fromIndex, toIndex);        
     }
 
    
@@ -227,14 +257,27 @@ public class ListAdapter implements HList {
 
    
     public Object[] toArray(Object[] a) throws ArrayStoreException, NullPointerException {
-        // TODO Auto-generated method stub
-        return null;
+        if(a == null) throw new NullPointerException();
+        if(a.length >= vec.size()){
+            for(int i = 0; i<vec.size(); i++) {
+                a[i] = vec.elementAt(i);
+            }
+            return a;
+        } else {
+            Object[] toReturn = new Object[vec.size()];
+            for(int i = 0; i<vec.size(); i++) {
+                a[i] = vec.elementAt(i);
+            }
+            return toReturn;
+        }
     }
 
 
-    public class ListIteratorAdapter implements HListIterator {
+    private class ListIteratorAdapter implements HListIterator {
 
         private ListIteratorAdapter(){     //forse protected
+            fromIndex = 0;
+            toIndex = vec.size();
             cursor = 0;
             indexOfLastObjectReturned = -1;
             removeUse = false;
@@ -242,17 +285,40 @@ public class ListAdapter implements HList {
             lastCallIsNext = false;
         }
 
+        private ListIteratorAdapter(int fromIndex) {     //forse protected
+            this.fromIndex = fromIndex;
+            toIndex = vec.size();
+            cursor = fromIndex;
+            indexOfLastObjectReturned = -1;
+            removeUse = false;
+            addUse = false;
+            lastCallIsNext = false;
+        }
+
+        private ListIteratorAdapter(int fromIndex, int toIndex) {     //forse protected
+            this.fromIndex = fromIndex;
+            this.toIndex = toIndex;
+            toIndex = vec.size();
+            cursor = fromIndex;
+            indexOfLastObjectReturned = -1;
+            removeUse = false;
+            addUse = false;
+            lastCallIsNext = false;
+        }
+
         public void add(Object o) {
-            vec.add(cursor, o);
+            vec.insertElementAt(o, cursor);
+            toIndex++;
             addUse = true;
+            modCount++;
         }
 
         public boolean hasNext(){
-            return (cursor <= vec.size());
+            return (cursor <= toIndex);
         }
 
         public boolean hasPrevious(){
-            return (cursor > 0);
+            return (cursor > fromIndex);
         }
 
         public Object next() throws NoSuchElementException{
@@ -281,13 +347,13 @@ public class ListAdapter implements HList {
             return cursor - 1;
         }
 
-        public void remove() throws  IllegalStateException {
+        public void remove() throws  IllegalStateException {                                                //ci sono modifiche da fare per la gestione di fromIndex e toIndex??
             if(removeUse || addUse || indexOfLastObjectReturned==-1) throw new IllegalStateException();
             vec.remove(indexOfLastObjectReturned);
             if(lastCallIsNext) cursor--;
             //se arrivo da next il cursore fa --, se arrivo da previous il cursore sta fermo
             removeUse = true;
-            
+            modCount++;
         }
 
         public void set(Object o) throws IllegalStateException {
@@ -300,9 +366,224 @@ public class ListAdapter implements HList {
         private boolean removeUse;
         private boolean addUse;
         private boolean lastCallIsNext;
+        private int fromIndex, toIndex;
 
     }
 
     
     private Vector vec;
+    private int  modCount;
+
+    public class RangedListAdapter extends ListAdapter {
+        
+        private int fromIndex, toIndex, modCount, size;
+
+        public RangedListAdapter(int fromIndex, int toIndex){
+            modCount = super.modCount;
+            size = toIndex - fromIndex;
+        }
+
+        public void add(int index, Object Element) throws IndexOutOfBoundsException {
+            if(modCount != super.modCount) throw new IllegalStateException();
+            if(index < 0 || index >= size ) throw new IndexOutOfBoundsException();
+            super.add(index + fromIndex, Element);
+        }
+    
+       
+        public boolean add(Object obj) {
+            if(modCount != super.modCount) throw new IllegalStateException();
+            super.modCount++;
+            return super.add(obj);
+        }
+    
+       
+        public boolean addAll(HCollection c) throws NullPointerException {                  //ho modificato modCount giusto? 
+            if(modCount != super.modCount) throw new IllegalStateException();
+            return super.addAll(c);
+        }
+    
+       
+        public boolean addAll(int index, HCollection c) throws IndexOutOfBoundsException, NullPointerException {
+            if(modCount != super.modCount) throw new IllegalStateException();
+            return super.addAll(index + fromIndex, c)
+        }
+    
+       
+        public void clear() {
+            if(modCount != super.modCount) throw new IllegalStateException();
+            for(int i=0; i<size; i++){
+                vec.removeElementAt(fromIndex);
+            }
+            super.modCount++;
+        }
+    
+       
+        public boolean contains(Object o) {
+            if(modCount != super.modCount) throw new IllegalStateException();
+            for(int i=fromIndex; i<toIndex; i++){
+                if(vec.elementAt(i).equals(o))
+                    return true;
+            }
+            return false;
+        }
+    
+       
+        public boolean containsAll(HCollection c) throws NullPointerException {
+            if(modCount != super.modCount) throw new IllegalStateException();
+            return super.containsAll(c);
+        }
+    
+    
+        public boolean equals(Object o) {
+            if(modCount != super.modCount) throw new IllegalStateException();
+            return super.equals(o);
+        }
+    
+       
+        public Object get(int index) {
+            if(modCount != super.modCount) throw new IllegalStateException();
+            return super.get(index + fromIndex);
+        }
+    
+       
+        public int hashCode() {
+            if(modCount != super.modCount) throw new IllegalStateException();
+            return super.hashCode();
+        }
+    
+       
+        public int indexOf(Object o) {
+            for(int i=fromIndex; i<toIndex; i++){
+                if(vec.elementAt(i).equals(0))
+                    return i;
+            }
+            return -1;
+        }
+    
+       
+        public boolean isEmpty() {              //SI????
+            return size == 0;
+        }
+    
+       
+        public HIterator iterator() {
+            return (HIterator)listIterator();
+        }
+    
+       
+        public int lastIndexOf(Object o) {
+            return vec.lastIndexOf(o);
+        }
+    
+       
+        public HListIterator listIterator() {
+            return new ListIteratorAdapter();
+        }
+    
+       
+        public HListIterator listIterator(int index) throws IndexOutOfBoundsException {
+            if(index > vec.size()) throw new IndexOutOfBoundsException();
+            return new ListIteratorAdapter(index);
+        }
+    
+       
+        public Object remove(int index) throws IndexOutOfBoundsException {
+                try{
+                    Object removed = vec.elementAt(index);
+                    vec.removeElementAt(index);
+                    modCount++;
+                    return removed;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    throw new IndexOutOfBoundsException();
+                }
+        }
+    
+       
+        public boolean remove(Object o) {
+            if(vec.remove(o)){
+                modCount++;
+                return true;
+            }
+            return false;
+        }
+    
+       
+        public boolean removeAll(HCollection c) throws NullPointerException {
+            if(c==null) throw new NullPointerException();
+    
+            int oldSize = size();
+            HIterator iter = c.iterator();
+            while(iter.hasNext()){
+                vec.remove(iter.next());
+            }
+    
+            if(oldSize == vec.size()) {
+                return false;
+            } else {
+                modCount++;
+                return true;
+            }
+        }
+    
+       
+        public boolean retainAll(HCollection c) throws NullPointerException {
+            if(c == null) throw new NullPointerException();
+            
+            int oldSize = vec.size();
+            for(int i=0; i<vec.size(); i++){
+                if(!c.contains(vec.elementAt(i))){
+                    vec.removeElementAt(i);
+                    i--;
+                }
+            }
+            if(oldSize == vec.size()) {
+                return false;
+            } else {
+                modCount++;
+                return true;
+            }
+        }
+    
+       
+        public Object set(int index, Object element) throws IndexOutOfBoundsException {
+            try{
+                Object removed = vec.elementAt(index);
+                vec.setElementAt(element, index);
+                return removed;
+            } catch (ArrayIndexOutOfBoundsException e ) {
+                throw new IndexOutOfBoundsException();
+            }
+            
+        }
+    
+       
+        public int size() {
+            return vec.size();
+        }
+
+        public Object[] toArray() {
+            Object[] array = new Object[vec.size()];
+            for(int i=0; i<vec.size(); i++){
+                array[i] = vec.elementAt(i);
+            }
+            return array;
+        }
+    
+       
+        public Object[] toArray(Object[] a) throws ArrayStoreException, NullPointerException {
+            if(a == null) throw new NullPointerException();
+            if(a.length >= vec.size()){
+                for(int i = 0; i<vec.size(); i++) {
+                    a[i] = vec.elementAt(i);
+                }
+                return a;
+            } else {
+                Object[] toReturn = new Object[vec.size()];
+                for(int i = 0; i<vec.size(); i++) {
+                    a[i] = vec.elementAt(i);
+                }
+                return toReturn;
+            }
+        }
+    }
 }

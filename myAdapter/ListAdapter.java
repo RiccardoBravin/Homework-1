@@ -37,7 +37,7 @@ public class ListAdapter implements HList {
 
     public boolean addAll(int index, HCollection c) throws NullPointerException, IndexOutOfBoundsException{
         if(c == null) throw new NullPointerException("Collection null");
-        if(index < 0) throw new IndexOutOfBoundsException("Indice negativo");
+        if(index < 0 || index > size()) throw new IndexOutOfBoundsException("Indice negativo");
         
         HIterator elems = c.iterator();
         

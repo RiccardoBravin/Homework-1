@@ -32,7 +32,7 @@ public class ListAdapter implements HList {
     }
 
     public boolean addAll(HCollection c) throws NullPointerException{
-        return addAll(0, c);
+        return addAll(v.size(), c);
     }
 
     public boolean addAll(int index, HCollection c) throws NullPointerException, IndexOutOfBoundsException{
@@ -122,7 +122,7 @@ public class ListAdapter implements HList {
     }
 
     public HIterator iterator(){
-        return new IteratorAdapter(v); 
+        return new ListIteratorAdapter(); 
     }
 
     public int lastIndexOf(Object o){
@@ -255,7 +255,7 @@ public class ListAdapter implements HList {
 
         public boolean addAll(HCollection c) throws NullPointerException, IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            return super.addAll(c);
+            return super.addAll(end, c);
         }
 
         public boolean addAll(int index, HCollection c) throws NullPointerException, IndexOutOfBoundsException, IllegalStateException{

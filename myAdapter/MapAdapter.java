@@ -166,7 +166,7 @@ public class MapAdapter implements HMap {
     //SE VA FATTO IL BACKING NON VA BENE
     public HCollection values(){
         
-        HCollection coll = new CollectionAdapter(); 
+        HCollection coll = new ListAdapter(); 
         Enumeration aux = ht.elements();
         while(aux.hasMoreElements()){
             coll.add(aux.nextElement());

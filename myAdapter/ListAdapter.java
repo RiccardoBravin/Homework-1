@@ -523,5 +523,16 @@ public class ListAdapter implements HList {
             lastIndex = -1;
         }
     }
+
+    public String toString(){
+        String s = "[";
+        if(!isEmpty()){
+            s += v.elementAt(0);
+            for(int i = 1; i < v.size(); i++){
+                s += ", " + v.elementAt(i).toString();
+            }
+        }
+        return s + "]";
+    }
 }
 

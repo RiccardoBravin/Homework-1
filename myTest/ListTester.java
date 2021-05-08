@@ -4,6 +4,9 @@ import myAdapter.ListAdapter;
 import org.hamcrest.*;
 //Junit
 import static org.junit.Assert.*;
+
+import java.util.Random;
+
 import org.junit.runner.*;
 import org.junit.Test;
 
@@ -46,14 +49,37 @@ public class ListTester{
         assertTrue("La lista non contiene l'oggetto appena inserito", l1.contains(null));
 
 
-
         assertFalse("La lista contiene elementi non inseriti ('Z')", l1.contains("Z"));
     }
     
     @Test
     public void addIndexTester(){
         ListAdapter l1 = new ListAdapter();
+        
         assertThrows("La lista non lancia indexOutOfBound quando viene inserito un elemento fuori posizione massima", IndexOutOfBoundsException.class, () -> {l1.add(1,"A");});
+        assertTrue("La stringa contiene qualcosa pur avendo lanciato un eccezzione all'inserimento", l1.isEmpty());
+        
+        l1.add(0,"A");
+        assertTrue("La lista non contiene l'elemento inserito", l1.contains("A"));
+        
+        l1.add(0,"B");
+        assertEquals("L'elemento inserito B non è nella posizione corretta", "B", l1.get(0));
+        
+        l1.add("C");
+        assertEquals("L'elemento C non è inserito nella posizione corretta", 2, l1.indexOf("C"));
+        assertEquals("L'elemento B non è inserito nella posizione corretta", 0, l1.indexOf("B"));
+        
+        l1.add(1,100);
+        assertEquals("L'elemento inserito 100 non è nella posizione corretta", 100, l1.get(1));
+        assertEquals("L'elemento 100 non è inserito nella posizione corretta", 1, l1.indexOf(100));
+        
+        int x =  new Random().nextInt(10);
+        for(int i = 0; i < x + 10 ; i++) l1.add(i,i);
+        
+        for(int i = 0; i < x + 10 ; i++) assertEquals("l'elemento in posizione " + i + "non è corretto", i, l1.get(i));
+        
+        
+        //System.out.println(l1.toString());
         
 
     }

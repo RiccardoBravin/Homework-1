@@ -465,31 +465,37 @@ public class ListAdapter implements HList {
         private int start;
         private int end;
         private int lastIndex = -1;
+        private ListAdapter l;
     
-        public ListIteratorAdapter(){
+        public ListIteratorAdapter(ListAdapter l) throws IllegalArgumentException{
+            if(l == null) throw new IllegalArgumentException();
+            this.l = l;
             start = 0;
             end = v.size();
             this.index = 0;
         }
-        public ListIteratorAdapter(int index) throws IndexOutOfBoundsException{
-            if(index > v.size()) throw new IndexOutOfBoundsException();
+        public ListIteratorAdapter(ListAdapter l, int index) throws IndexOutOfBoundsException{
+            if(l == null) throw new IllegalArgumentException();
+            this.l = l;
+            if(index < 0 || index >= l.size()) throw new IndexOutOfBoundsException();
             start = 0;
             end = v.size();
             this.index = index;
         }
 
-        public ListIteratorAdapter(int fromIndex, int toIndex, int index) throws IndexOutOfBoundsException{
-            if(index > toIndex - fromIndex) throw new IndexOutOfBoundsException();
+        public ListIteratorAdapter(ListAdapter l, int fromIndex, int toIndex, int index) throws IndexOutOfBoundsException{
+            if(l == null) throw new IllegalArgumentException();
+            this.l = l;
+            if(index >= toIndex - fromIndex || index < 0) throw new IndexOutOfBoundsException();
             start = fromIndex;
             end = toIndex;
             this.index = index + fromIndex;
         }
     
         public void add(Object o){
-            v.insertElementAt(o, index);
+            l.add(index, o);
             index++;
             end++;
-            modCount++;
         }
     
         public boolean hasNext(){
@@ -503,7 +509,7 @@ public class ListAdapter implements HList {
         public Object next() throws NoSuchElementException{
             if(!this.hasNext()) throw new NoSuchElementException();
             lastIndex = index;
-            return v.elementAt(index++);
+            return l.get(index++);
         }
     
         public int nextIndex(){
@@ -514,7 +520,7 @@ public class ListAdapter implements HList {
             if(!this.hasPrevious()) throw new NoSuchElementException();
             index--;
             lastIndex = index;
-            return v.elementAt(index);
+            return l.get(index);
         }
     
         public int previousIndex(){
@@ -523,8 +529,7 @@ public class ListAdapter implements HList {
     
         public void remove() throws IllegalStateException{
             if(lastIndex == -1) throw new IllegalStateException();
-            v.removeElementAt(lastIndex);
-            modCount++;
+            l.remove(lastIndex);
             end--;
             lastIndex = -1;
             index--;
@@ -532,7 +537,7 @@ public class ListAdapter implements HList {
     
         public void set(Object o) throws IllegalStateException{
             if(lastIndex == -1) throw new IllegalStateException();
-            v.setElementAt(o, lastIndex);
+            l.set(lastIndex, o);
             lastIndex = -1;
         }
     }
@@ -548,6 +553,7 @@ public class ListAdapter implements HList {
         return s + "]";
     }
 
+    //da rimuovere dopo testing
     public int getModCount(){
         return modCount;
     }

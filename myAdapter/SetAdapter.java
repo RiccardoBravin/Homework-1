@@ -82,7 +82,7 @@ public class SetAdapter implements HSet{
         return v.removeElement(o);
     }
 
-    public boolean removeAll(HCollection c) throws NullPointerException{  //BISOGNA CONTROLLARE CHE MI PASSI SEMPRE UNA HCOLLECTION E CHE JAVA NON PERMETTA DI PASSARE ALTRO ALTRIMENTI BISOGNA FARE UN THROW
+    public boolean removeAll(HCollection c) throws NullPointerException{  
         if(c == null) throw new NullPointerException("Collection null");
         HIterator iter = c.iterator();
         boolean changed = false;
@@ -96,7 +96,7 @@ public class SetAdapter implements HSet{
 
     }
 
-    public boolean retainAll(HCollection c) throws NullPointerException{ //STESSA ROBA DI SOPRA
+    public boolean retainAll(HCollection c) throws NullPointerException{
 
         if(c == null) throw new NullPointerException("Collection null");
 

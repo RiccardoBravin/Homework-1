@@ -88,16 +88,7 @@ public class MapAdapter implements HMap {
 
     public HSet entrySet(){ //È sbagliato c'è backing solo in un verso
 
-        Enumeration k = ht.keys();
-        Enumeration e = ht.elements();
-
-        HSet ret = new SetAdapter();
-                
-        while(k.hasMoreElements()){
-            ret.add(new EntryAdapter(k.nextElement(), e.nextElement()));
-        }
-
-        return ret;
+        return new EntrySet(ht);
     }
 
     public boolean equals(Object o){
@@ -124,15 +115,7 @@ public class MapAdapter implements HMap {
 
     public HSet keySet(){
 
-        Enumeration key = ht.keys();
-        
-        HSet set = new SetAdapter();
-
-        while(key.hasMoreElements()){
-            set.add(key.nextElement());
-        }
-
-        return set;
+        return new KeySet(ht);
     }
 
     public Object put(Object key, Object value) throws NullPointerException{
@@ -165,32 +148,389 @@ public class MapAdapter implements HMap {
 
     //SE VA FATTO IL BACKING NON VA BENE
     public HCollection values(){
+        return ValueCollection(ht);
+    }
+
+
+    
+    public class KeySet implements HSet{
         
-        HCollection coll = new ListAdapter(); 
-        Enumeration aux = ht.elements();
-        while(aux.hasMoreElements()){
-            coll.add(aux.nextElement());
+        private Hashtable ht;
+
+        public KeySet(Hashtable ht){
+            this.ht = ht;
         }
+
+        public boolean add(Object o) throws UnsupportedOperationException{
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean addAll(HCollection o) throws UnsupportedOperationException{
+            throw new UnsupportedOperationException();
+        }
+
+        public void clear(){
+            ht.clear();
+        }
+
+        public boolean contains(Object o){
+            return ht.containsKey(o);
+        }
+
+        public boolean containsAll(HCollection c) throws NullPointerException{
+            if(c == null) throw new NullPointerException("Collection null");
+            HIterator iter = c.iterator();
+            while(iter.hasNext()){
+                if(!contains(iter.next())){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public boolean equals(Object o){
+            return (o instanceof HSet) && (((HSet)o).containsAll(this)) && (this.containsAll((HSet)o));
+        }
+
+        public int hashCode(){
+            int sum = 0;
+            HIterator iter = this.iterator();
+            while(iter.hasNext()){
+                sum += iter.next().hashCode();
+            }
+            return sum;
+        }        
+
+        public boolean isEmpty(){
+            return ht.isEmpty();
+        }
+
+        public HIterator iterator(){
+            return new IteratorAdapter(this);
+        }
+
+        public boolean remove(Object o){
+            if(ht.remove(o) == null)  return false;
+            return true;
+        }
+
+        public boolean removeAll(HCollection c) throws NullPointerException{  
+            if(c == null) throw new NullPointerException("Collection null");
+
+            HIterator iter = c.iterator();
+            boolean changed = false;
+
+            while(iter.hasNext()){
+                if(remove(iter.next())){
+                    changed = true;
+                }
+            }
+    
+            return changed;
+        }
+
+        public boolean retainAll(HCollection c) throws NullPointerException{
+
+            if(c == null) throw new NullPointerException("Collection null");
+    
+            HIterator iter = this.iterator();
+            boolean changed = false;
+            
+            while(iter.hasNext()){
+                if(!c.contains(iter.next())){
+                    iter.remove();
+                    changed = true;
+                }
+            }
+    
+            return changed;
+        }
+
+        public int size(){
+            return ht.size();
+        }
+
+        public Object[] toArray(){
+            Object[] arr = new Object[this.size()];
+            Enumeration keys = ht.keys();
+
+            for(int i = 0; i < ht.size(); i++){
+                arr[i] = keys.nextElement();
+            }
+            return arr;
+        }
+
+        public Object[] toArray(Object[] a) throws NullPointerException{
         
-        return coll;
-    }
+            if(a == null) throw new NullPointerException("Array null");
+    
+            if(a.length >= this.size()){
+                Enumeration keys = ht.keys();
+                for(int i = 0; i < ht.size(); i++){
+                    a[i] = keys.nextElement();
+                }
+                return a;
+            }
+            return this.toArray();
+        }
 
-
-
-
-    //Metodi da eliminare terminati i test
-    public Hashtable getHashtable(){
-        return ht;
-    }
-
-
-
-    public class EntrySet{
-
-    }
-
-
-    public class KeySet{
         
+
+    }
+
+    public class EntrySet implements HSet{
+        private Hashtable ht;
+
+        public EntrySet(Hashtable ht){
+            this.ht = ht;
+        }
+
+        public boolean add(Object o) throws UnsupportedOperationException{
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean addAll(HCollection o) throws UnsupportedOperationException{
+            throw new UnsupportedOperationException();
+        }
+
+        public void clear(){
+            ht.clear();
+        }
+
+        public boolean contains(Object o){
+            if(! (o instanceof EntryAdapter)) return false;
+            EntryAdapter obj = (EntryAdapter)o;
+            return ht.containsKey(obj.getKey()) && ht.get(obj.getKey()).equals(obj.getValue());
+        }
+
+        public boolean containsAll(HCollection c) throws NullPointerException{
+            if(c == null) throw new NullPointerException("Collection null");
+            HIterator iter = c.iterator();
+            while(iter.hasNext()){
+                if(!contains(iter.next())){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public boolean equals(Object o){
+            return (o instanceof HSet) && (((HSet)o).containsAll(this)) && (this.containsAll((HSet)o));
+        }
+
+        public int hashCode(){
+            int sum = 0;
+            HIterator iter = this.iterator();
+            while(iter.hasNext()){
+                sum += iter.next().hashCode();
+            }
+            return sum;
+        }        
+
+        public boolean isEmpty(){
+            return ht.isEmpty();
+        }
+
+        public HIterator iterator(){
+            return new IteratorAdapter(this);
+        }
+
+        public boolean remove(Object o){
+            if(! (o instanceof EntryAdapter)) return false;
+            if(ht.remove(((EntryAdapter)o).getKey()) == null)  return false;
+            return true;
+        }
+
+        public boolean removeAll(HCollection c) throws NullPointerException{  
+            if(c == null) throw new NullPointerException("Collection null");
+
+            HIterator iter = c.iterator();
+            boolean changed = false;
+
+            while(iter.hasNext()){
+                if(remove(iter.next())){
+                    changed = true;
+                }
+            }
+    
+            return changed;
+        }
+
+        public boolean retainAll(HCollection c) throws NullPointerException{
+
+            if(c == null) throw new NullPointerException("Collection null");
+    
+            HIterator iter = this.iterator();
+            boolean changed = false;
+            
+            while(iter.hasNext()){
+                if(!c.contains(iter.next())){
+                    iter.remove();
+                    changed = true;
+                }
+            }
+    
+            return changed;
+        }
+
+        public int size(){
+            return ht.size();
+        }
+
+        public Object[] toArray(){
+            Object[] arr = new Object[this.size()];
+            Enumeration keys = ht.keys();
+
+            for(int i = 0; i < ht.size(); i++){
+                Object key = keys.nextElement();
+                arr[i] = new EntryAdapter(key, ht.get(key));
+            }
+            return arr;
+        }
+
+        public Object[] toArray(Object[] a) throws NullPointerException{
+        
+            if(a == null) throw new NullPointerException("Array null");
+    
+            if(a.length >= this.size()){
+                Enumeration keys = ht.keys();
+                for(int i = 0; i < ht.size(); i++){
+                    Object key = keys.nextElement();
+                    a[i] = new EntryAdapter(key, ht.get(key));
+                }
+                return a;
+            }
+            return this.toArray();
+        }
+
+        
+    }
+
+    public class ValueCollection implements HCollection{
+        private Hashtable ht;
+
+        public ValueCollection(Hashtable ht){
+            this.ht = ht;
+        }
+
+        public boolean add(Object o) throws UnsupportedOperationException{
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean addAll(HCollection o) throws UnsupportedOperationException{
+            throw new UnsupportedOperationException();
+        }
+
+        public void clear(){
+            ht.clear();
+        }
+
+        public boolean contains(Object o){
+            return ht.contains(o);
+        }
+
+        public boolean containsAll(HCollection c) throws NullPointerException{
+            if(c == null) throw new NullPointerException("Collection null");
+            HIterator iter = c.iterator();
+            while(iter.hasNext()){
+                if(!contains(iter.next())){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public boolean equals(Object o){
+            return (o instanceof HCollection) && (((HCollection)o).containsAll(this)) && (this.containsAll((HCollection)o));
+        }
+
+        public int hashCode(){
+            int sum = 0;
+            HIterator iter = this.iterator();
+            while(iter.hasNext()){
+                sum += iter.next().hashCode();
+            }
+            return sum;
+        }        
+
+        public boolean isEmpty(){
+            return ht.isEmpty();
+        }
+
+        public HIterator iterator(){
+            return new IteratorAdapter(this);
+        }
+
+        public boolean remove(Object o){ //chiedere se va bene che rimuova un elemento qualsiasi
+            Enumeration keys = ht.keys();
+            while(keys.hasMoreElements()){
+                Object k = keys.nextElement();
+                if(ht.get(k) == o){
+                    ht.remove(k);
+                    return true;
+                } 
+            }
+            return false;
+        }
+
+        public boolean removeAll(HCollection c) throws NullPointerException{  
+            if(c == null) throw new NullPointerException("Collection null");
+
+            HIterator iter = c.iterator();
+            boolean changed = false;
+
+            while(iter.hasNext()){
+                if(remove(iter.next())){
+                    changed = true;
+                }
+            }
+    
+            return changed;
+        }
+
+        public boolean retainAll(HCollection c) throws NullPointerException{
+
+            if(c == null) throw new NullPointerException("Collection null");
+    
+            HIterator iter = this.iterator();
+            boolean changed = false;
+            
+            while(iter.hasNext()){
+                if(!c.contains(iter.next())){
+                    iter.remove();
+                    changed = true;
+                }
+            }
+    
+            return changed;
+        }
+
+        public int size(){
+            return ht.size();
+        }
+
+        public Object[] toArray(){
+            Object[] arr = new Object[this.size()];
+            Enumeration elems = ht.elements();
+
+            for(int i = 0; i < ht.size(); i++){
+                arr[i] = elems.nextElement();
+            }
+            return arr;
+        }
+
+        public Object[] toArray(Object[] a) throws NullPointerException{
+        
+            if(a == null) throw new NullPointerException("Array null");
+    
+            if(a.length >= this.size()){
+                Enumeration elems = ht.elements();
+                for(int i = 0; i < ht.size(); i++){
+                    a[i] = elems.nextElement();
+                }
+                return a;
+            }
+            return this.toArray();
+        }
     }
 }

@@ -4,19 +4,20 @@ import java.util.Vector;
 public class IteratorAdapter implements HIterator{
     private int index;
     private boolean nexted = false;
-    private Vector v;
+    private HCollection coll;
 
-    public IteratorAdapter(Vector v){
+    public IteratorAdapter(HCollection c){
+        this.coll = c;
         index = 0;
     }
-    public IteratorAdapter(int i) throws IllegalArgumentException{
-        if(i < v.size())
-            throw new IllegalArgumentException();
+    public IteratorAdapter(HCollection c, int i) throws IllegalArgumentException{
+        if(i <= c.size() || i < 0)throw new IllegalArgumentException();
+        this.coll = c;
         i = index;
     }
 
     public boolean hasNext(){
-        return index < v.size();
+        return index < coll.size();
     }
 
     public Object next() throws NoSuchElementException{
@@ -26,7 +27,7 @@ public class IteratorAdapter implements HIterator{
         
         nexted = true;
         index++;
-        return v.get(index - 1);
+        return coll.toArray()[index - 1];
             
     }
 
@@ -36,7 +37,7 @@ public class IteratorAdapter implements HIterator{
         }
         nexted = false;
         index--;
-        v.removeElementAt(index);
+        coll.remove(coll.toArray()[index]);
         
     }
 }

@@ -188,6 +188,12 @@ public class ListTester{
         //System.out.println(l2.size());
         System.out.println(l1);
         System.out.println(l2);
+
+        HIterator i = l2.iterator();
+        System.out.println(i.next());
+        i.remove();
+        System.out.println(l1);
+        System.out.println(l2);
         
     }
 

@@ -122,7 +122,7 @@ public class ListAdapter implements HList {
     }
 
     public HIterator iterator(){
-        return new ListIteratorAdapter(); 
+        return new ListIteratorAdapter(this); 
     }
 
     public int lastIndexOf(Object o){
@@ -130,12 +130,12 @@ public class ListAdapter implements HList {
     }
 
     public HListIterator listIterator(){
-        return new ListIteratorAdapter();
+        return new ListIteratorAdapter(this);
     }
 
     public HListIterator listIterator(int index) throws IndexOutOfBoundsException{
         if((index < 0 || index > v.size())) throw new IndexOutOfBoundsException();
-        return new ListIteratorAdapter(index);
+        return new ListIteratorAdapter(this, index);
     }
 
     public Object remove(int index) throws IndexOutOfBoundsException{
@@ -543,14 +543,7 @@ public class ListAdapter implements HList {
     }
 
     public String toString(){
-        String s = "[";
-        if(!isEmpty()){
-            s += v.elementAt(0);
-            for(int i = 1; i < v.size(); i++){
-                s += ", " + v.elementAt(i).toString();
-            }
-        }
-        return s + "]";
+        return v.toString();
     }
 
     //da rimuovere dopo testing

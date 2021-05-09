@@ -1,36 +1,20 @@
 //Adapter
 import myAdapter.ListAdapter;
 
-import org.graalvm.compiler.graph.NodeList.SubList;
 //Hamcrest
 import org.hamcrest.*;
 //Junit
 import static org.junit.Assert.*;
-
-import java.util.List;
-import java.util.Random;
-
 import org.junit.runner.*;
-
-import ListAdapter.LimitedListAdapter;
-
 import org.junit.Test;
 
 
+import java.util.Random;
+
+
+
+
 public class ListTester{
-
-    private boolean add;
-
-
-
-
-
-
-
-
-
-
-
 
     @Test
     public void constructorTester(){
@@ -69,6 +53,9 @@ public class ListTester{
 
 
         assertFalse("La lista contiene elementi non inseriti ('Z')", l1.contains("Z"));
+
+        assertEquals("Il primo elemento inserito non si trova correttamente all'inizio della lista", 0, l1.indexOf("A"));
+        assertEquals("Il secondo elemento inserito non si trova correttamente nella seconda posizione della lista", 1, l1.indexOf(1));
     }
     
     @Test
@@ -160,7 +147,7 @@ public class ListTester{
 
         //altri test da aggiungere? 
 
-        System.out.println(l1);
+        //System.out.println(l1);
     }
 
     @Test
@@ -170,34 +157,89 @@ public class ListTester{
         l1.add(1);
         l1.add(2);
         l1.add(3);
-        ListAdapter.LimitedListAdapter l2 = (ListAdapter.LimitedListAdapter)l1.subList(1, l1.size()-1);
+
+        ListAdapter l2 = new ListAdapter();
+        listFiller(l2, 2);
+        assertNotEquals("Le due mappe risultano uguali pur non essendolo", l1, l2);
         
-        System.out.println(l1);
-        System.out.println(l2.size());
-        System.out.println(l2.get(1));
-        System.out.println();
-
-        System.out.println("MODCOUNT");
-        System.out.println(l1.getModCount());
-        System.out.println(l2.stateCheck());
-        //l2.add(4);
-        //l1.add(5);
-        System.out.println(l1.getModCount());
-        System.out.println(l2.stateCheck());
-
-        //System.out.println(l2.size());
-        System.out.println(l1);
-        System.out.println(l2);
-
-        HIterator i = l2.iterator();
-        System.out.println(i.next());
-        i.remove();
-        System.out.println(l1);
-        System.out.println(l2);
+        l2.add(1);
+        l2.add(2);
+        l2.add(3);
+        assertEquals("Le due mappe risultano diverse pur contenendo gli stessi elementi", l1, l2);
         
+        assertEquals("Le mappe sono ritenute uguali pur avendo hashcode diversi", l1.hashCode(), l2.hashCode());
+        
+        //System.out.println(l1);
     }
 
+    @Test
+    public void getTest(){
+        ListAdapter l1 = new ListAdapter();
+        assertThrows("La lista vuota non lancia IndexOutOfBoundsException se viene richesto un valore ad indici non esistenti (-1)", IndexOutOfBoundsException.class, () -> {l1.get(-1);});
+        assertThrows("La lista vuota non lancia IndexOutOfBoundsException se viene richesto un valore ad indici non esistenti (0)", IndexOutOfBoundsException.class, () -> {l1.get(0);});
+        assertThrows("La lista vuota non lancia IndexOutOfBoundsException se viene richesto un valore ad indici non esistenti (1)", IndexOutOfBoundsException.class, () -> {l1.get(1);});
+        
+        l1.add("x");
+        assertThrows("La lista vuota lancia IndexOutOfBoundsException se viene richesto un valore ad indici non esistenti (-1)", IndexOutOfBoundsException.class, () -> {l1.get(-1);});
+        assertThrows("La lista vuota lancia IndexOutOfBoundsException se viene richesto un valore ad indici non esistenti (1)", IndexOutOfBoundsException.class, () -> {l1.get(1);});
+        assertEquals("La lista sembra non contenere x al posto corretto", "x", l1.get(0));
 
+        listFiller(l1, 10);
+        l1.add(4, "xx");
+        assertEquals("La lista sembra non contenere xx al posto corretto", "xx", l1.get(4));
+        
+        //System.out.println(l1);
+    }
+
+    @Test
+    public void hashTest(){
+        ListAdapter l1 = new ListAdapter();
+        assertEquals("L'hash code della lista vuota non è 1 come atteso", 1, l1.hashCode());
+        
+        l1.add(null);
+        assertEquals("L'hash code della lista contenente null non è 31 come atteso", 31, l1.hashCode());
+
+        l1.add(10);
+        assertEquals("L'hash code della lista [null, 10] non è 971 come atteso", 971, l1.hashCode());
+
+        l1.add("A");
+        assertEquals("L'hash code della lista [null, 10, 'A'] non è 971 come atteso", 30166, l1.hashCode());
+    }
+
+    @Test
+    public void indexOfTest(){
+        ListAdapter l1 = new ListAdapter();
+        assertEquals("indexOf su lista vuota non da sempre -1 (null)", -1, l1.indexOf(null));
+        assertEquals("indexOf su lista vuota non da sempre -1 (0)", -1, l1.indexOf(0));
+        assertEquals("indexOf su lista vuota non da sempre -1 ('')", -1, l1.indexOf(""));
+
+        l1.add(null);
+        assertEquals("indexOf su lista [null] non trova null", 0, l1.indexOf(null));
+        assertEquals("indexOf su lista [null] trova elementi non presenti (0)", -1, l1.indexOf(0));
+        
+        l1.clear();
+        listFiller(l1, 5);
+        l1.add(0, "x");
+        l1.add(2, "x");
+        l1.add(5, "x");
+        assertEquals("indexOf non ritorna la prima occorrenza dell'elemento cercato (x)", 0, l1.indexOf("x"));
+        l1.remove(0);
+        assertEquals("indexOf non ritorna la prima occorrenza dell'elemento cercato dopo una rimozione (x)", 1, l1.indexOf("x"));
+    }
+
+    @Test
+    public void isEmptyTest(){
+        ListAdapter l1 = new ListAdapter();
+        assertTrue("La lista appena inizializzata non è vuota", l1.isEmpty());
+
+        l1.add(null);
+        assertFalse("La lista contenente elementi dice di essere vuota", l1.isEmpty());
+
+        l1.clear();
+        assertTrue("La lista pulita contiene degli elementi", l1.isEmpty());
+    }
+
+    
 
 
 

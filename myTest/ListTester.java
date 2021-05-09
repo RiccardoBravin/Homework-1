@@ -1,5 +1,7 @@
 //Adapter
 import myAdapter.ListAdapter;
+
+import org.graalvm.compiler.graph.NodeList.SubList;
 //Hamcrest
 import org.hamcrest.*;
 //Junit
@@ -9,10 +11,26 @@ import java.util.List;
 import java.util.Random;
 
 import org.junit.runner.*;
+
+import ListAdapter.LimitedListAdapter;
+
 import org.junit.Test;
 
 
 public class ListTester{
+
+    private boolean add;
+
+
+
+
+
+
+
+
+
+
+
 
     @Test
     public void constructorTester(){
@@ -145,6 +163,33 @@ public class ListTester{
         System.out.println(l1);
     }
 
+    @Test
+    public void equalsTest(){
+        ListAdapter l1 = new ListAdapter();
+        listFiller(l1, 2);
+        l1.add(1);
+        l1.add(2);
+        l1.add(3);
+        ListAdapter.LimitedListAdapter l2 = (ListAdapter.LimitedListAdapter)l1.subList(1, l1.size()-1);
+        
+        System.out.println(l1);
+        System.out.println(l2.size());
+        System.out.println(l2.get(1));
+        System.out.println();
+
+        System.out.println("MODCOUNT");
+        System.out.println(l1.getModCount());
+        System.out.println(l2.stateCheck());
+        //l2.add(4);
+        //l1.add(5);
+        System.out.println(l1.getModCount());
+        System.out.println(l2.stateCheck());
+
+        //System.out.println(l2.size());
+        System.out.println(l1);
+        System.out.println(l2);
+        
+    }
 
 
 

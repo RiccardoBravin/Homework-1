@@ -26,8 +26,8 @@ public class ListAdapter implements HList {
     }
 
     public boolean add(Object obj){
-        v.addElement(obj);
-        modCount++;
+        this.v.addElement(obj);
+        this.modCount++;
         return true;
     }
 
@@ -205,9 +205,9 @@ public class ListAdapter implements HList {
     }
 
     public HList subList(int fromIndex, int toIndex) throws IndexOutOfBoundsException{
-        if(fromIndex < toIndex || fromIndex < 0 || toIndex > v.size()) throw new IndexOutOfBoundsException();
+        if(fromIndex > toIndex || fromIndex < 0 || toIndex > v.size()) throw new IndexOutOfBoundsException();
         
-        return new LimitedListAdapter(fromIndex, toIndex);
+        return new LimitedListAdapter(this, fromIndex, toIndex);
     }
 
     public Object[] toArray(){
@@ -234,9 +234,10 @@ public class ListAdapter implements HList {
         int start;
         int end;
         int modCheck;
+        ListAdapter l;
 
-        public LimitedListAdapter(int fromIndex, int toIndex){
-
+        public LimitedListAdapter(ListAdapter l, int fromIndex, int toIndex){
+            this.l = l;
             modCheck = modCount;
             start = fromIndex;
             end = toIndex;
@@ -245,38 +246,37 @@ public class ListAdapter implements HList {
         public void add(int index, Object Element) throws IndexOutOfBoundsException, IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
             if(index < 0 || index > size()) throw new IndexOutOfBoundsException();
-            super.add(index + start, Element);
+            l.add(index + start, Element);
         }
 
         public boolean add(Object obj) throws IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            return super.add(obj);
+            l.add(end, obj);
+            return true;
         }
 
         public boolean addAll(HCollection c) throws NullPointerException, IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            return super.addAll(end, c);
+            return l.addAll(end, c);
         }
 
         public boolean addAll(int index, HCollection c) throws NullPointerException, IndexOutOfBoundsException, IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
             if(index < 0 || index > size()) throw new IndexOutOfBoundsException();
-            return super.addAll(index, c);
+            return l.addAll(start + index, c);
         }
 
         public void clear() throws IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
             for(int i = start; i < end; i++){
-                v.removeElementAt(start);
+                l.remove(start);
             }
-            modCount++;
-
         }
 
         public boolean contains(Object o) throws IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            for(int i = start; i < end; i++){
-                if(v.elementAt(i).equals(o)){
+            for(int i = 0; i < size(); i++){
+                if(l.get(i).equals(o)){
                     return true;
                 }
             }
@@ -305,9 +305,9 @@ public class ListAdapter implements HList {
     
             HIterator itero = ((HList)o).iterator();
             
-            int i = start;
+            int i = 0;
             while(itero.hasNext()){
-                if(!itero.next().equals(v.elementAt(i))) return false;
+                if(!itero.next().equals(l.get(i))) return false;
                 i++;
             }
     
@@ -316,16 +316,16 @@ public class ListAdapter implements HList {
 
         public  Object get(int index) throws IndexOutOfBoundsException, IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            if(index < 0 || index > size()) throw new IndexOutOfBoundsException();
-            return super.get(index);
+            if(index < 0 || index >= this.size()) throw new IndexOutOfBoundsException();
+            return l.get(index+start);
         }
 
         public int hashCode() throws IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
             int hashCode = 1;
-            for(int i = start; i < end; i++){
+            for(int i = 0; i < size(); i++){
 
-                Object obj = v.elementAt(i);
+                Object obj = get(i);
                 hashCode = 31*hashCode + (obj==null ? 0 : obj.hashCode());
             }
 
@@ -334,9 +334,8 @@ public class ListAdapter implements HList {
 
         public int indexOf(Object o) throws IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            int ind = v.indexOf(o, start);
-            if(ind < end){
-                return ind;
+            for(int i = 0; i < size(); i++){
+                if(get(i).equals(o)) return i;
             }
 
             return -1;
@@ -349,14 +348,13 @@ public class ListAdapter implements HList {
 
         public HIterator iterator() throws IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            return new ListIteratorAdapter(start, end, 0); 
+            return new ListIteratorAdapter(l, start, end, 0); 
         }
 
         public int lastIndexOf(Object o) throws IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            int ind = v.lastIndexOf(o, end);
-            if(ind > start){
-                return ind;
+            for(int i = size()-1; i >= 0; i--){
+                if(get(i).equals(o)) return i;
             }
 
             return -1;
@@ -364,29 +362,29 @@ public class ListAdapter implements HList {
 
         public HListIterator listIterator() throws IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            return new ListIteratorAdapter(start, end, 0); 
+            return new ListIteratorAdapter(l, start, end, 0); 
         }
         
         public HListIterator listIterator(int index) throws IndexOutOfBoundsException, IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
             if((index < 0 || index > size())) throw new IndexOutOfBoundsException();
-            return new ListIteratorAdapter(start, end, index);
+            return new ListIteratorAdapter(l, start, end, index);
         }
         
 
         public Object remove(int index) throws IndexOutOfBoundsException, IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
             if((index < 0 || index > size())) throw new IndexOutOfBoundsException();
-            return super.remove(index + start);
+            return l.remove(index + start);
 
         }
 
         public boolean remove(Object o) throws IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
 
-            for(int i = start; i < end; i++){
-                if(v.elementAt(i).equals(o)){
-                    super.remove(i);
+            for(int i = 0; i < this.size(); i++){
+                if(get(i).equals(o)){
+                    remove(i);
                     return true;
                 }    
             }
@@ -406,8 +404,8 @@ public class ListAdapter implements HList {
 
         public Object set(int index, Object element){
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            if((index < 0 || index > size())) throw new IndexOutOfBoundsException();
-            return super.set(index, element);
+            if((index < 0 || index >= size())) throw new IndexOutOfBoundsException();
+            return l.set(index + start, element);
         }
 
         public int size() throws IllegalStateException{
@@ -418,15 +416,15 @@ public class ListAdapter implements HList {
         public HList subList(int fromIndex, int toIndex) throws IndexOutOfBoundsException, IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
             if((fromIndex < 0 || toIndex > size() || fromIndex > toIndex)) throw new IndexOutOfBoundsException();
-            return new LimitedListAdapter(fromIndex + start, toIndex + start);
+            return new LimitedListAdapter(l, fromIndex + start, toIndex + start);
 
         }
 
         public Object[] toArray() throws IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
             Object[] arr = new Object[size()];
-            for(int i = start; i < end; i++){
-                arr[i - start] = v.get(i);
+            for(int i = 0; i < size(); i++){
+                arr[i] = this.get(i);
             }
             return arr;
         }
@@ -436,12 +434,27 @@ public class ListAdapter implements HList {
             if(a == null) throw new NullPointerException("Array null");
     
             if(a.length >= size()){
-                for(int i = start; i < end; i++){
-                    a[i - start] = v.elementAt(i);
+                for(int i = 0; i < size(); i++){
+                    a[i] = this.get(i);
                 }
                 return a;
             }
             return toArray();
+        }
+
+        public boolean stateCheck(){
+            return modCheck == modCount;
+        }
+
+        public String toString(){
+            String s = "[";
+            if(!isEmpty()){
+                s += get(0);
+                for(int i = 1; i < size(); i++){
+                    s += ", " + get(i).toString();
+                }
+            }
+            return s + "]";
         }
 
     }
@@ -533,6 +546,10 @@ public class ListAdapter implements HList {
             }
         }
         return s + "]";
+    }
+
+    public int getModCount(){
+        return modCount;
     }
 }
 

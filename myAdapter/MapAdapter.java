@@ -68,6 +68,7 @@ public class MapAdapter implements HMap {
     }
 
     public MapAdapter(HMap map) throws NullPointerException{
+        if(map == null) throw new NullPointerException();
         ht = new Hashtable(map.size());
         this.putAll(map);
     }
@@ -86,16 +87,17 @@ public class MapAdapter implements HMap {
         return ht.contains(value);
     }
 
-    public HSet entrySet(){ //È sbagliato c'è backing solo in un verso
+    public HSet entrySet(){
 
         return new EntrySet(ht);
     }
 
     public boolean equals(Object o){
+        if(!(o instanceof HMap)) return false;
         return this.entrySet().equals(((HMap)o).entrySet());
     }
 
-    public Object get(Object key){
+    public Object get(Object key) throws NullPointerException{
         return ht.get(key);
     }
 
@@ -146,9 +148,12 @@ public class MapAdapter implements HMap {
     }
 
 
-    //SE VA FATTO IL BACKING NON VA BENE
     public HCollection values(){
-        return ValueCollection(ht);
+        return new ValueCollection(ht);
+    }
+
+    public String toString(){
+        return ht.toString();
     }
 
 

@@ -225,6 +225,7 @@ public class ListTester{
         assertEquals("indexOf non ritorna la prima occorrenza dell'elemento cercato (x)", 0, l1.indexOf("x"));
         l1.remove(0);
         assertEquals("indexOf non ritorna la prima occorrenza dell'elemento cercato dopo una rimozione (x)", 1, l1.indexOf("x"));
+        //System.out.println(l1);
     }
 
     @Test
@@ -237,10 +238,62 @@ public class ListTester{
 
         l1.clear();
         assertTrue("La lista pulita contiene degli elementi", l1.isEmpty());
+        //System.out.println(l1);
     }
 
-    
+    @Test
+    public void iteratorTest(){
+        ListAdapter l1 = new ListAdapter();
+        HIterator i =  l1.iterator();
+        assertNotNull("L'oggetto ritornato dall'iteratore è nullo", i);
+        //Altri test?
+    }
 
+    @Test
+    public void lastIndexOfTest(){
+        ListAdapter l1 = new ListAdapter();
+        assertEquals("indexOf su lista vuota non da sempre -1 (null)", -1, l1.lastIndexOf(null));
+        assertEquals("indexOf su lista vuota non da sempre -1 (0)", -1, l1.lastIndexOf(0));
+        assertEquals("indexOf su lista vuota non da sempre -1 ('')", -1, l1.lastIndexOf(""));
+
+        l1.add(null);
+        assertEquals("indexOf su lista [null] non trova null", 0, l1.lastIndexOf(null));
+        assertEquals("indexOf su lista [null] trova elementi non presenti (0)", -1, l1.lastIndexOf(0));
+        
+        l1.clear();
+        listFiller(l1, 5);
+        l1.add(0, "x");
+        l1.add(2, "x");
+        l1.add(5, "x");
+        assertEquals("indexOf non ritorna la prima occorrenza dell'elemento cercato (x)", 5, l1.lastIndexOf("x"));
+        l1.remove(5);
+        l1.remove(2);
+        assertEquals("indexOf non ritorna la prima occorrenza dell'elemento cercato dopo una rimozione (x)", 0, l1.lastIndexOf("x"));
+        //System.out.println(l1);
+    }
+
+    @Test
+    public void listIteratorTest(){
+        ListAdapter l1 = new ListAdapter();
+        HIterator i = null;
+        try{
+            i = l1.listIterator();
+            assertNotNull("L'inizializzazione dell'iteratore su una lista vuota non lancia IndexOutOfBoundsException", i);
+        }catch(IndexOutOfBoundsException ioobe){
+            assertNull("L'iteratore è inizializzato pur avendo lanciato un'eccezione", i);
+        }
+        
+        
+        assertThrows("L'inizializzazione dell'iteratore in una posizione non disponibile (-1) non lancia IndexOutOfBoundsException", IndexOutOfBoundsException.class, () -> {l1.listIterator(-1);});
+        assertThrows("L'inizializzazione dell'iteratore in una posizione non disponibile (0) non lancia IndexOutOfBoundsException", IndexOutOfBoundsException.class, () -> {l1.listIterator(0);});
+        assertThrows("L'inizializzazione dell'iteratore in una posizione non disponibile (1) non lancia IndexOutOfBoundsException", IndexOutOfBoundsException.class, () -> {l1.listIterator(1);});
+        l1.add(null);
+        assertThrows("L'inizializzazione dell'iteratore in una posizione non disponibile (-1) non lancia IndexOutOfBoundsException", IndexOutOfBoundsException.class, () -> {l1.listIterator(-1);});
+        assertNotNull("L'inizializzazione dell'iteratore in posizione 0 ritorna null", l1.listIterator(0));
+        assertThrows("L'inizializzazione dell'iteratore in una posizione non disponibile (1) non lancia IndexOutOfBoundsException", IndexOutOfBoundsException.class, () -> {l1.listIterator(1);});
+        
+        //Altri test?
+    }
 
 
 

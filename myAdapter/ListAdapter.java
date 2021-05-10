@@ -129,12 +129,12 @@ public class ListAdapter implements HList {
         return v.lastIndexOf(o);
     }
 
-    public HListIterator listIterator(){
+    public HListIterator listIterator() throws IndexOutOfBoundsException{
         return new ListIteratorAdapter(this);
     }
 
     public HListIterator listIterator(int index) throws IndexOutOfBoundsException{
-        if((index < 0 || index > v.size())) throw new IndexOutOfBoundsException();
+        if((index < 0 || index >= v.size())) throw new IndexOutOfBoundsException();
         return new ListIteratorAdapter(this, index);
     }
 

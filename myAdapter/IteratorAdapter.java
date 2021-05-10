@@ -8,7 +8,7 @@ public class IteratorAdapter implements HIterator{
 
     public IteratorAdapter(HCollection c) throws IllegalArgumentException, IndexOutOfBoundsException{
         if (c == null) throw new IllegalArgumentException("La collection passata è null");
-        if(c.isEmpty()) throw new IndexOutOfBoundsException("La collection passata è vuota, impossibile iterare");
+        //if(c.isEmpty()) throw new IndexOutOfBoundsException("La collection passata è vuota, impossibile iterare");
         this.coll = c;
         index = 0;
     }

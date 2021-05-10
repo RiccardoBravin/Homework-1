@@ -8,8 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.runner.*;
 import org.junit.Test;
 
-
-import java.util.Random;
+import java.util.Vector;
 
 
 
@@ -80,10 +79,10 @@ public class ListTester{
         assertEquals("L'elemento inserito 100 non è nella posizione corretta", 100, l1.get(1));
         assertEquals("L'elemento 100 non è inserito nella posizione corretta", 1, l1.indexOf(100));
         
-        int x =  new Random().nextInt(10);
-        for(int i = 0; i < x + 10 ; i++) l1.add(i,i);
         
-        for(int i = 0; i < x + 10 ; i++) assertEquals("l'elemento in posizione " + i + "non è corretto", i, l1.get(i));
+        for(int i = 0; i < 10 ; i++) l1.add(i,i);
+        
+        for(int i = 0; i < 10 ; i++) assertEquals("l'elemento in posizione " + i + "non è corretto", i, l1.get(i));
         
         //System.out.println(l1.toString());
     }
@@ -295,12 +294,206 @@ public class ListTester{
         //Altri test?
     }
 
+    @Test
+    public void removeIndexTest(){
+        ListAdapter l1 = new ListAdapter();
+        assertThrows("La lista permette la rimozione in posizione -1 da una lista vuota", IndexOutOfBoundsException.class, () -> {l1.remove(-1);});
+        assertThrows("La lista permette la rimozione in posizione 0 da una lista vuota", IndexOutOfBoundsException.class, () -> {l1.remove(0);});
+        assertThrows("La lista permette la rimozione in posizione 4 da una lista vuota", IndexOutOfBoundsException.class, () -> {l1.remove(4);});
+        
+        listFiller(l1, 5);
+        
+        l1.add(0, "x");
+        l1.add(3, "x");
+        l1.add(5, "y");
 
+        assertThrows("La lista permette la rimozione in posizione -1 da una lista contenente elementi", IndexOutOfBoundsException.class, () -> {l1.remove(-1);});
+        assertThrows("La lista permette la rimozione in posizione 8 da una lista contenente 8 elementi", IndexOutOfBoundsException.class, () -> {l1.remove(8);});
+        
+        assertEquals("La lista è della dimensione errata dopo gli inserimenti", 8, l1.size());    
+        assertEquals("La lista ritorna l'oggetto sbagliato dalla rimozione in 0", "x", l1.remove(0));
+        assertEquals("La lista è della dimensione errata dopo la rimozione di x", 7, l1.size());
 
+        assertEquals("La lista ritorna l'oggetto sbagliato dalla rimozione in 4", "y", l1.remove(4));
+        assertFalse("La lista contiene ancora y dopo la rimozione", l1.contains("y"));
+        
+        assertEquals("La lista ha cambiato l'ordine degli elementi dopo le rimozioni", "x", l1.get(2));
 
+        //System.out.println(l1);
+    }
 
+    @Test
+    public void removeObjectTest(){
+        ListAdapter l1 = new ListAdapter();
+        assertFalse("La lista vuota afferma di rimuovere elementi non presenti (null)", l1.remove(null));
+        assertFalse("La lista vuota afferma di rimuovere elementi non presenti (x)", l1.remove("x"));
+        assertFalse("La lista vuota afferma di rimuovere elementi non presenti (1.7)", l1.remove(1.7));
+        
+        listFiller(l1, 5);
+        
+        l1.add(0, "x");
+        l1.add(3, "x");
+        l1.add(5, "y");
 
+        assertFalse("La lista non vuota afferma di rimuovere elementi non presenti (null)", l1.remove(null));
+        assertFalse("La lista non vuota afferma di rimuovere elementi non presenti (1.7)", l1.remove(1.7));
+        
+        assertEquals("La lista è della dimensione errata dopo gli inserimenti", 8, l1.size());    
+        assertTrue("La lista sembra non rimuovere l'lemento x", l1.remove("x"));
+        assertEquals("La lista è della dimensione errata dopo la rimozione di x", 7, l1.size());
+        assertEquals("La lista non rimuove x dalla posizione attesa", "x", l1.get(2));
 
+        assertTrue("La lista sembra non rimuovere l'elemento y", l1.remove("y"));
+        assertFalse("La lista contiene ancora y dopo la rimozione", l1.contains("y"));
+        assertFalse("La lista dice di rimuovere un elemento non più presente", l1.remove("y"));
+
+        assertEquals("La lista ha cambiato l'ordine degli elementi dopo le rimozioni", "x", l1.get(2));
+        //System.out.println(l1);
+    }
+
+    @Test
+    public void removeAllTest(){
+        ListAdapter l1 = new ListAdapter();
+        ListAdapter l2 = new ListAdapter();
+
+        assertThrows("La lista non lancia errore se la collection passata è nulla", NullPointerException.class, () -> {l1.removeAll(null);});
+        
+        l1.add("x");
+        l2.add("x");
+        assertTrue("Remove all non sembra aver apportato modifiche alla lista (x)", l1.removeAll(l2));
+        assertTrue("La lista non è stata svuotata dopo un removeAll (x)", l1.isEmpty());
+        l2.clear();
+
+        listFiller(l1, 5);
+        listFiller(l2, 5);
+        assertTrue("Remove all non sembra aver apportato modifiche alla lista (Test)", l1.removeAll(l2));
+        assertTrue("Remove all non ha rimosso tutti gli elementi richiesti", l1.isEmpty());
+        l2.clear();
+
+        l1.add("A");
+        l1.add("B");
+        l1.add("C");
+        l2.add("1");
+        l2.add("2");
+        assertFalse("Remove all sembra aver apportato modifiche alla lista quando non conteneva alcun elemento della collection passata", l1.removeAll(l2));
+        assertEquals("La lista ha eliminato elementi quando non doveva farlo", 3, l1.size());
+
+        l2.add("A");
+        l2.add(1,"B");
+        assertTrue("Remove all sembra non aver apportato modifiche alla lista pur contenendo elementi della collection passata", l1.removeAll(l2));
+        assertEquals("La lista ha eliminato elementi quando non doveva farlo", 1, l1.size());
+        assertEquals("La lista non contiene l'lemento rimanente corretto", "C", l1.get(0));
+
+    }
+
+    @Test
+    public void retainAllTest(){
+        ListAdapter l1 = new ListAdapter();
+        ListAdapter l2 = new ListAdapter();
+
+        assertThrows("La lista non lancia errore se la collection passata è nulla", NullPointerException.class, () -> {l1.retainAll(null);});
+        
+        l1.add("x");
+        l2.add("x");
+        assertFalse("Retain all sembra aver apportato modifiche alla lista (x)", l1.retainAll(l2));
+        assertFalse("La lista è stata svuotata dopo un retainAll (x)", l1.isEmpty());
+        l2.clear();
+        l1.clear();
+
+        listFiller(l1, 5);
+        assertTrue("Retain all non sembra aver apportato modifiche alla lista passando una collection vuota", l1.retainAll(l2));
+        assertTrue("Retain all non ha rimosso tutti gli elementi richiesti", l1.isEmpty());
+        l2.clear();
+
+        l1.add("A");
+        l1.add("B");
+        l1.add("C");
+        l2.add("1");
+        l2.add("2");
+        l2.add("A");
+        assertTrue("Remove all sembra non aver apportato modifiche alla lista quando non conteneva solo elementi della collection passata", l1.retainAll(l2));
+        assertEquals("La lista ha eliminato troppi o troppi pochi elementi", 1, l1.size());
+        assertEquals("La lista non contiene l'lemento che doveva rimanere (A)", "A", l1.get(0));
+
+        //Altri test?
+
+    }
+
+    @Test
+    public void setTest(){
+        ListAdapter l1 = new ListAdapter();
+        assertThrows("La lista vuota non lancia IndexOutOfBoundsException cercando di settare un elemento non esistente (-1)", IndexOutOfBoundsException.class, () -> {l1.set(-1, null);});
+        assertThrows("La lista vuota non lancia IndexOutOfBoundsException cercando di settare un elemento non esistente (0)", IndexOutOfBoundsException.class, () -> {l1.set(0, null);});
+        assertThrows("La lista vuota non lancia IndexOutOfBoundsException cercando di settare un elemento non esistente (1)", IndexOutOfBoundsException.class, () -> {l1.set(1, null);});
+
+        l1.add("A");
+        assertThrows("La lista vuota non lancia IndexOutOfBoundsException cercando di settare un elemento non esistente (-1)", IndexOutOfBoundsException.class, () -> {l1.set(-1, "B");});
+        assertEquals("L'oggetto ritornato non equivale a quello presente in precedenza (A)", "A", l1.set(0, "B"));
+        assertThrows("La lista vuota non lancia IndexOutOfBoundsException cercando di settare un elemento non esistente (1)", IndexOutOfBoundsException.class, () -> {l1.set(1, "B");});
+        assertEquals("L'elemento A non è stato sostituito da B", "B", l1.get(0));
+
+    }
+
+    @Test
+    public void sizeTest(){
+        ListAdapter l1 = new ListAdapter();
+        assertEquals("La dimensione della lista creata non corrisponde a quella effettiva (0)", 0, l1.size());
+
+        l1.add("1");
+        assertEquals("La dimensione della lista non corrisponde a quella effettiva (1)", 1, l1.size());
+
+        listFiller(l1, 100);
+        assertEquals("La dimensione della lista non corrisponde a quella effettiva (101)", 101, l1.size());
+
+        l1.remove("1");
+        assertEquals("La dimensione della lista non corrisponde a quella effettiva (100)", 100, l1.size());
+
+        l1.clear();
+        assertEquals("La dimensione della lista svuotata non corrisponde a quella effettiva (0)", 0, l1.size());
+    }
+
+    @Test
+    public void subListTest(){
+        ListAdapter l1 = new ListAdapter();
+        assertThrows("La lista vuota non lancia IndexOutOfBoundsException quando viene creata una sua sottolista", IndexOutOfBoundsException.class, () -> {l1.subList(0, 0);});
+    
+        listFiller(l1, 1);
+        assertNotNull("La sottolista ritornata è nulla", l1.subList(0, 1)); 
+        assertThrows("La lista non lancia IndexOutOfBoundsException quando viene creata una sua sottolista fuori indice", IndexOutOfBoundsException.class, () -> {l1.subList(1, 1);});
+        
+        listFiller(l1, 10);
+        assertEquals("La lista non è della dimensione corretta", 4, l1.subList(3, 7).size()); 
+    }
+
+    @Test
+    public void toArrayTest(){
+        ListAdapter l1 = new ListAdapter();
+        assertEquals("Il vettore ritornato non è corretto", new Object[0], l1.toArray());
+        
+        Object[] arr =  new Object[10];
+        for(int i = 0; i < 10; i++) arr[i] = "Test";
+        listFiller(l1, 10);
+        assertEquals("Il vettore ritornato non è corretto", arr, l1.toArray());
+
+    }
+
+    @Test
+    public void toArrayObjectTest(){
+        ListAdapter l1 = new ListAdapter();
+        assertEquals("L'array ritornato non è corretto", new Object[0], l1.toArray(new Object[0]));
+        assertEquals("L'array ritornato non è corretto", new Object[0], l1.toArray(null));
+        
+        Object[] arr1 =  new Object[11];
+        Object[] arr2 =  new Object[11];
+        for(int i = 0; i < 10; i++){
+            arr1[i] = "Test";
+        } 
+        arr1[10] = "x";
+        arr2[10] = "x";
+        listFiller(l1, 10);
+        assertEquals("L'array ritornato non è corretto", arr1, l1.toArray(arr2));
+
+    }
 
 
     private void listFiller(HCollection l, int number){

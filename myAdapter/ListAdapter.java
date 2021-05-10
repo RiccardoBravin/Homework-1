@@ -151,11 +151,11 @@ public class ListAdapter implements HList {
     }
 
     public boolean remove(Object o){
-        boolean aux = v.removeElement(o);
-        if(aux){
+        if(v.removeElement(o)){
             modCount++;
+            return true;
         }
-        return aux;
+        return false;
     }
 
     public boolean removeAll(HCollection c) throws NullPointerException{
@@ -205,7 +205,7 @@ public class ListAdapter implements HList {
     }
 
     public HList subList(int fromIndex, int toIndex) throws IndexOutOfBoundsException{
-        if(fromIndex > toIndex || fromIndex < 0 || toIndex > v.size()) throw new IndexOutOfBoundsException();
+        if(fromIndex > toIndex || fromIndex < 0 || toIndex > v.size() || fromIndex-toIndex == 0) throw new IndexOutOfBoundsException();
         
         return new LimitedListAdapter(this, fromIndex, toIndex);
     }
@@ -218,8 +218,8 @@ public class ListAdapter implements HList {
         return arr;
     }
 
-    public Object[] toArray(Object[] a) throws NullPointerException{
-        if(a == null) throw new NullPointerException("Array null");
+    public Object[] toArray(Object[] a){
+        if(a == null) return this.toArray();;
 
         if(a.length >= this.size()){
             for(int i = 0; i < v.size(); i++){

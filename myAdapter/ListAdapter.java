@@ -278,7 +278,7 @@ public class ListAdapter implements HList {
         public boolean contains(Object o) throws IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
             for(int i = 0; i < size(); i++){
-                if(l.get(i).equals(o)){
+                if(get(i).equals(o)){
                     return true;
                 }
             }
@@ -297,7 +297,7 @@ public class ListAdapter implements HList {
                 }
             }
 
-            return false;
+            return true;
         }
 
         public boolean equals(Object o) throws IllegalStateException{

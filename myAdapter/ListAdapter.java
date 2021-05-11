@@ -236,7 +236,9 @@ public class ListAdapter implements HList {
         int modCheck;
         ListAdapter l;
 
-        public LimitedListAdapter(ListAdapter l, int fromIndex, int toIndex){
+        public LimitedListAdapter(ListAdapter l, int fromIndex, int toIndex) throws IndexOutOfBoundsException, NullPointerException{
+            if(l == null) throw new NullPointerException();
+            if(fromIndex > toIndex || fromIndex < 0 || toIndex > v.size() || fromIndex-toIndex == 0) throw new IndexOutOfBoundsException();
             this.l = l;
             modCheck = modCount;
             start = fromIndex;

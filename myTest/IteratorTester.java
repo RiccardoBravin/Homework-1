@@ -1,7 +1,7 @@
 //package myTest;
 
 //Adapter
-import myAdapter.IteratorAdapter;
+import myAdapter.*;
 //Hamcrest
 import org.hamcrest.*;
 //Junit
@@ -10,6 +10,9 @@ import static org.junit.Assert.*;
 import java.util.NoSuchElementException;
 
 import org.junit.runner.*;
+
+import MapAdapter.EntryAdapter;
+
 import org.junit.Test;
 
 public class IteratorTester {
@@ -27,6 +30,8 @@ public class IteratorTester {
         HCollection vals = map1.values();
         
         HIterator i1 = null;
+
+        
 
         try{
             i1 = new IteratorAdapter(null);
@@ -64,6 +69,7 @@ public class IteratorTester {
         assertNotNull("Il costruttore dell'iteratore senza indice ritorna oggetti nulli", ik);
         assertNotNull("Il costruttore dell'iteratore con indice ritorna oggetti nulli", ie);
         assertNotNull("Il costruttore dell'iteratore con indice ritorna oggetti nulli", iv);
+
     }
 
     @Test
@@ -113,6 +119,7 @@ public class IteratorTester {
         assertFalse("L'iteratore di chiavi in ultima posizione su set pieno ritorna vero su hasNext", ik.hasNext());
         assertFalse("L'iteratore di entry in ultima posizione su set pieno ritorna vero su hasNext", ie.hasNext());
         assertFalse("L'iteratore di valori in ultima posizione su collection piena ritorna vero su hasNext", iv.hasNext());
+        
 
     }
 
@@ -128,16 +135,32 @@ public class IteratorTester {
         HIterator ie = new IteratorAdapter(entrys);
         HIterator iv = new IteratorAdapter(vals);
 
-        assertThrows("L'iteratore di chiavi su set vuoto non lancia NoSuchElementException con next ", NoSuchElementException.class, () -> {ik.next();});
-        assertThrows("L'iteratore di entry su set vuoto non lancia NoSuchElementException con next ", NoSuchElementException.class, () -> {ie.next();});
-        assertThrows("L'iteratore di valori su collection vuota non lancia NoSuchElementException con next ", NoSuchElementException.class, () -> {iv.next();});
+        Object obj = null;
+        try{
+            obj = ik.next();
+            assertTrue("L'iteratore di chiavi su set vuoto non lancia NoSuchElementException con next", false);
+        }catch (NoSuchElementException nsee){
+            assertNull("Il valore di obj è stato sovrascritto pur avendo next lanciato un'eccezione", obj);
+        }
 
+        try{
+            obj = ie.next();
+            assertTrue("L'iteratore di entry su set vuoto non lancia NoSuchElementException con next", false);
+        }catch (NoSuchElementException nsee){
+            assertNull("Il valore di obj è stato sovrascritto pur avendo next lanciato un'eccezione", obj);
+        }
+
+        try{
+            obj = iv.next();
+            assertTrue("L'iteratore di valori su collection vuota non lancia NoSuchElementException con next", false);
+        }catch (NoSuchElementException nsee){
+            assertNull("Il valore di obj è stato sovrascritto pur avendo next lanciato un'eccezione", obj);
+        }
+        
 
         map1.put("A", 1);
         map1.put("B", 2);
-        map1.put("C", 3);
-        map1.put("D", 4);
-        map1.put("E", 5);
+        map1.put(3, "C");
 
         keys = map1.keySet();
         entrys = map1.entrySet();
@@ -147,7 +170,91 @@ public class IteratorTester {
         ie = new IteratorAdapter(entrys);
         iv = new IteratorAdapter(vals);
 
+        assertEquals("L'iteratore di chiavi non ritorna la chiave corretta (A)", "A", ik.next());
+        assertEquals("L'iteratore di chiavi non ritorna la chiave corretta (A,1)", new MapAdapter().new EntryAdapter("A",1) , ie.next());
+        assertEquals("L'iteratore di chiavi non ritorna la chiave corretta (1)", 1, iv.next());
+
+        assertEquals("L'iteratore di chiavi non ritorna la chiave corretta (3)", 3, ik.next());
+        assertEquals("L'iteratore di chiavi non ritorna la chiave corretta (3,c)", new MapAdapter().new EntryAdapter(3,"C") , ie.next());
+        assertEquals("L'iteratore di chiavi non ritorna la chiave corretta (c)", "C", iv.next());
+
+        assertEquals("L'iteratore di chiavi non ritorna la chiave corretta (B)", "B", ik.next());
+        assertEquals("L'iteratore di chiavi non ritorna la chiave corretta (B,2)", new MapAdapter().new EntryAdapter("B",2) , ie.next());
+        assertEquals("L'iteratore di chiavi non ritorna la chiave corretta (2)", 2, iv.next());
+
+        try{
+            obj = ik.next();
+            assertTrue("L'iteratore di chiavi in ultima posizione su set pieno non lancia NoSuchElementException con next", false);
+        }catch (NoSuchElementException nsee){
+            assertNull("Il valore di obj è stato sovrascritto pur avendo next lanciato un'eccezione", obj);
+        }
+
+        try{
+            obj = ie.next();
+            assertTrue("L'iteratore di entry in ultima posizione su set pieno non lancia NoSuchElementException con next", false);
+        }catch (NoSuchElementException nsee){
+            assertNull("Il valore di obj è stato sovrascritto pur avendo next lanciato un'eccezione", obj);
+        }
+
+        try{
+            obj = iv.next();
+            assertTrue("L'iteratore di valori in ultima posizione su collection piena non lancia NoSuchElementException con next", false);
+        }catch (NoSuchElementException nsee){
+            assertNull("Il valore di obj è stato sovrascritto pur avendo next lanciato un'eccezione", obj);
+        }
+        
+
+
         System.out.println(map1);
+    }
+
+    @Test
+    public void removeTest(){
+        MapAdapter map1 = new MapAdapter();
+        
+        HSet keys = map1.keySet();
+        HSet entrys = map1.entrySet();
+        HCollection vals = map1.values();
+
+        HIterator ikk = new IteratorAdapter(keys);
+        HIterator iee = new IteratorAdapter(entrys);
+        HIterator ivv = new IteratorAdapter(vals);
+
+        assertThrows("L'iteratore di chiavi su set vuoto non lancia NoSuchElementException pur non avendo mai fatto next" ,IllegalStateException.class , () -> {ikk.remove();});
+        assertThrows("L'iteratore di entry su set vuoto non lancia NoSuchElementException pur non avendo mai fatto next" ,IllegalStateException.class , () -> {iee.remove();});
+        assertThrows("L'iteratore di valori su collection vuota non lancia NoSuchElementException pur non avendo mai fatto next" ,IllegalStateException.class , () -> {ivv.remove();});
+
+
+        map1.put("A", 1);
+        map1.put("B", 2);
+        map1.put(3, "C");
+
+        keys = map1.keySet();
+        entrys = map1.entrySet();
+        vals = map1.values();
+
+        HIterator ik = new IteratorAdapter(keys);
+        HIterator ie = new IteratorAdapter(entrys);
+        HIterator iv = new IteratorAdapter(vals);
+
+        Object key = ik.next();
+        ik.remove();
+        assertFalse("La chiave rimossa da remove è ancora presente nella mappa", map1.containsKey(key));
+        
+        MapAdapter.EntryAdapter entry = (MapAdapter.EntryAdapter)ie.next();
+        ie.remove();
+        assertFalse("La entry rimossa da remove è ancora presente nella mappa", map1.get(key) == entry.getValue());
+
+        Object val = iv.next();
+        iv.remove();
+        //Questo assert non ha alcun senso se nella mappa ci sono più chiavi cono lo stesso valore ma è di per sè insensata la cosa di rimuovere un valore da una mappa...
+        assertFalse("La chiave rimossa da remove è ancora presente nella mappa", map1.containsValue(val));
+
+
+        assertThrows("L'iteratore di chiavi su set pieno non lancia NoSuchElementException pur non avendolo eseguito dopo next" ,IllegalStateException.class , () -> {ik.remove();});
+        assertThrows("L'iteratore di entry su set pieno non lancia NoSuchElementException pur non avendolo eseguito dopo next" ,IllegalStateException.class , () -> {ie.remove();});
+        assertThrows("L'iteratore di valori su collection piena non lancia NoSuchElementException pur non avendolo eseguito dopo next" ,IllegalStateException.class , () -> {iv.remove();});
+
     }
 
 }

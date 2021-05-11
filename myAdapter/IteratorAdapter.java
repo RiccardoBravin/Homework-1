@@ -1,5 +1,6 @@
+//package myAdapter;
+
 import java.util.NoSuchElementException;
-import java.util.Vector;
 
 public class IteratorAdapter implements HIterator{
     private int index;
@@ -36,7 +37,7 @@ public class IteratorAdapter implements HIterator{
 
     public void remove() throws IllegalStateException{
         if(!nexted){
-            throw new IllegalStateException("Next non chiamato prima una chiamata a remove");
+            throw new IllegalStateException("Next non chiamato prima della chiamata a remove");
         }
         nexted = false;
         index--;

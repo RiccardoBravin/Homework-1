@@ -17,7 +17,7 @@ public class MapAdapter implements HMap {
         private Object value;
 
 
-        private EntryAdapter(Object key, Object value){
+        public EntryAdapter(Object key, Object value){
             this.key = key;
             this.value = value;
         }

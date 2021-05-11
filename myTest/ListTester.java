@@ -1,3 +1,5 @@
+//package myTest;
+
 //Adapter
 import myAdapter.ListAdapter;
 
@@ -7,10 +9,6 @@ import org.hamcrest.*;
 import static org.junit.Assert.*;
 import org.junit.runner.*;
 import org.junit.Test;
-
-import java.util.Vector;
-
-
 
 
 public class ListTester{
@@ -59,7 +57,7 @@ public class ListTester{
     
     @Test
     public void addIndexTester(){
-        ListAdapter l1 = new ListAdapter();
+        HList l1 = new ListAdapter();
         
         assertThrows("La lista non lancia indexOutOfBound quando viene inserito un elemento fuori posizione massima", IndexOutOfBoundsException.class, () -> {l1.add(1,"A");});
         assertThrows("La lista non lancia indexOutOfBound quando viene inserito un elemento fuori posizione massima", IndexOutOfBoundsException.class, () -> {l1.add(-1,"A");});

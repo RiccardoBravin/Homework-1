@@ -36,7 +36,16 @@ public class MapTester {
         map1.put("D", 4);
         map1.put("E", 5);
         
-        MapAdapter map2 =  new MapAdapter(map1);
+        MapAdapter map2 = null;
+
+        try{
+            map2 = new MapAdapter(null);
+            assertTrue("La mappa è stata inizializzata con una mappa null senza lanciare eccezioni", false);
+        }catch(NullPointerException npe){
+            assertNull("La mappa è stata inizializzata pur avendo lanciato un eccezione",map2);
+        }
+
+        map2 =  new MapAdapter(map1);
 
         assertEquals("La mappa costruitda con map1 non è identica", map1, map2);
         

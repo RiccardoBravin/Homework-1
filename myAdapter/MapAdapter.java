@@ -419,6 +419,7 @@ public class MapAdapter implements HMap {
         private Hashtable ht;
 
         public ValueCollection(Hashtable ht){
+            if(ht == null) throw new NullPointerException();
             this.ht = ht;
         }
 
@@ -470,7 +471,7 @@ public class MapAdapter implements HMap {
             return new IteratorAdapter(this);
         }
 
-        public boolean remove(Object o){ //chiedere se va bene che rimuova un elemento qualsiasi
+        public boolean remove(Object o){
             Enumeration keys = ht.keys();
             while(keys.hasMoreElements()){
                 Object k = keys.nextElement();

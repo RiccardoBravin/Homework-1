@@ -203,9 +203,6 @@ public class IteratorTester {
             assertNull("Il valore di obj è stato sovrascritto pur avendo next lanciato un'eccezione", obj);
         }
         
-
-
-        System.out.println(map1);
     }
 
     @Test

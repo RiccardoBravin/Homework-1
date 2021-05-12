@@ -8,7 +8,6 @@ import org.junit.runner.*;
 import org.junit.Test;
 
 import java.util.Hashtable;
-import java.util.List;
 
 public class EntrySetTester {
     
@@ -154,8 +153,6 @@ public class EntrySetTester {
 
     }
 
-
-    //SONO ARRRIVATO QUIO A FIXARE ERRORI
     @Test
     public void removeAllTest(){
         Hashtable ht1 =  new Hashtable();
@@ -168,7 +165,7 @@ public class EntrySetTester {
         assertFalse("il removeall dice di aver rimosso elementi passando una collection vuota", es1.removeAll(new ListAdapter()));
         ht1.clear();
 
-        l.add("A");
+        l.add(new MapAdapter().new EntryAdapter("A", 1));
 
         assertFalse("Il removeall dice di aver rimosso elementi da una hashtable vuota", es1.removeAll(l));
 
@@ -177,6 +174,7 @@ public class EntrySetTester {
         assertTrue("Removeall di una lista sembra non apportare modifiche alla hashtable", es1.removeAll(l));
         assertTrue("La hashtable non è vuota dopo il remove", ht1.isEmpty());
     }
+
 
     @Test
     public void retainAllTest(){
@@ -190,7 +188,7 @@ public class EntrySetTester {
         assertTrue("il removeall dice di aver rimosso elementi passando una collection vuota", es1.retainAll(new ListAdapter()));
         assertTrue("La hashtable non è vuota dopo il remove", ht1.isEmpty());
 
-        l.add("A");
+        l.add(new MapAdapter().new EntryAdapter("A", 1));
 
         assertFalse("Il removeall dice di aver rimosso elementi da una hashtable vuota", es1.retainAll(l));
 
@@ -198,7 +196,7 @@ public class EntrySetTester {
         ht1.put("B", 2);
 
         assertTrue("retainAll di una lista sembra non apportare modifiche alla hashtable", es1.retainAll(l));
-        assertTrue("La hashtable non contiene gli elementi corretti dopo retainall", ht1.containsKey("A") && ht1.size() == 1);
+        assertTrue("La hashtable non contiene gli elementi corretti dopo retainall", ht1.containsKey("A") && ht1.contains(1) && ht1.size() == 1);
     }
 
     @Test
@@ -222,7 +220,7 @@ public class EntrySetTester {
         ht1.put("A", 1);
         ht1.put("B", 1);
 
-        assertArrayEquals("Il EntrySet [A,B] non torna un array con i corretti elementi ", new Object[] {"A","B"}, es1.toArray());
+        assertArrayEquals("Il EntrySet [A,B] non torna un array con i corretti elementi ", new Object[] {new MapAdapter().new EntryAdapter("A", 1),new MapAdapter().new EntryAdapter("B", 1)}, es1.toArray());
     }
 
     @Test
@@ -235,11 +233,11 @@ public class EntrySetTester {
         ht1.put("A", 1);
         ht1.put("B", 1);
 
-        assertArrayEquals("Il EntrySet [A,B] non torna un array con i corretti elementi nell'array passato ", new Object[] {"A","B",null,null}, es1.toArray(new Object[4]));
+        assertArrayEquals("Il EntrySet [A,B] non torna un array con i corretti elementi nell'array passato ", new Object[] {new MapAdapter().new EntryAdapter("A", 1),new MapAdapter().new EntryAdapter("B", 1),null,null}, es1.toArray(new Object[4]));
 
-        assertArrayEquals("Il EntrySet [A,B] non torna un array con i corretti elementi dato un array di dimensione corretta", new Object[] {"A","B"}, es1.toArray(new Object[2]));
+        assertArrayEquals("Il EntrySet [A,B] non torna un array con i corretti elementi dato un array di dimensione corretta", new Object[] {new MapAdapter().new EntryAdapter("A", 1),new MapAdapter().new EntryAdapter("B", 1)}, es1.toArray(new Object[2]));
         
-        assertArrayEquals("Il EntrySet [A,B] non torna un array con i corretti elementi dato un array di dimensione inferiore", new Object[] {"A","B"}, es1.toArray(new Object[0]));
+        assertArrayEquals("Il EntrySet [A,B] non torna un array con i corretti elementi dato un array di dimensione inferiore", new Object[] {new MapAdapter().new EntryAdapter("A", 1),new MapAdapter().new EntryAdapter("B", 1)}, es1.toArray(new Object[0]));
     }
 
 }

@@ -8,7 +8,6 @@ import org.junit.runner.*;
 import org.junit.Test;
 
 import java.util.Hashtable;
-import java.util.List;
 
 public class KeySetTester {
     

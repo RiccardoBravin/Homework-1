@@ -20,7 +20,7 @@ public class ListAdapter implements HList {
             v.insertElementAt(Element, index);
             modCount++;
         }catch (ArrayIndexOutOfBoundsException aioobe){
-            System.out.println(aioobe.getMessage());
+            //System.out.println(aioobe.getMessage());
             throw new IndexOutOfBoundsException();
         }
     }
@@ -94,7 +94,7 @@ public class ListAdapter implements HList {
         try{
             return v.elementAt(index);
         }catch (ArrayIndexOutOfBoundsException aioobe){
-            System.out.println(aioobe.getMessage());
+            //System.out.println(aioobe.getMessage());
             throw new IndexOutOfBoundsException(aioobe.getMessage());
         }
 
@@ -145,7 +145,7 @@ public class ListAdapter implements HList {
             modCount++;
             return aux;
         }catch(ArrayIndexOutOfBoundsException aioobe){
-            System.out.println(aioobe.getMessage());
+            //System.out.println(aioobe.getMessage());
             throw new IndexOutOfBoundsException(aioobe.getMessage());
         }
     }
@@ -195,7 +195,7 @@ public class ListAdapter implements HList {
             v.setElementAt(element, index);
             return aux;
         }catch(ArrayIndexOutOfBoundsException aioobe){
-            System.out.println(aioobe.getMessage());
+            //System.out.println(aioobe.getMessage());
             throw new IndexOutOfBoundsException(aioobe.getMessage());
         }
     }

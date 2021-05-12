@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 import org.junit.runner.*;
 import org.junit.Test;
 
-public class ListIteratorAdapter {
+public class ListIteratorTester {
 
     @Test 
     public void constructorTest(){

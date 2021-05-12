@@ -238,7 +238,7 @@ public class ListAdapter implements HList {
 
         public LimitedListAdapter(ListAdapter l, int fromIndex, int toIndex) throws IndexOutOfBoundsException, NullPointerException{
             if(l == null) throw new NullPointerException();
-            if(fromIndex > toIndex || fromIndex < 0 || toIndex > v.size() || fromIndex-toIndex == 0) throw new IndexOutOfBoundsException();
+            if(fromIndex >= toIndex || fromIndex < 0 || toIndex > l.size()) throw new IndexOutOfBoundsException();
             this.l = l;
             modCheck = modCount;
             start = fromIndex;
@@ -349,8 +349,7 @@ public class ListAdapter implements HList {
         }
 
         public HIterator iterator() throws IllegalStateException{
-            if(modCheck != modCount) throw new IllegalStateException("State modified");
-            return new ListIteratorAdapter(l, start, end, 0); 
+            return listIterator();
         }
 
         public int lastIndexOf(Object o) throws IllegalStateException{
@@ -376,7 +375,7 @@ public class ListAdapter implements HList {
 
         public Object remove(int index) throws IndexOutOfBoundsException, IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            if((index < 0 || index > size())) throw new IndexOutOfBoundsException();
+            if((index < 0 || index >= size())) throw new IndexOutOfBoundsException();
             return l.remove(index + start);
 
         }
@@ -395,12 +394,43 @@ public class ListAdapter implements HList {
         
         public boolean removeAll(HCollection c) throws NullPointerException, IllegalStateException{ //da verificare
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            return super.removeAll(c); 
+            if(c == null) throw new NullPointerException("Collection null");
+
+            HIterator elems = c.iterator();
+            boolean changed = false;
+            
+            while(elems.hasNext()){
+
+                Object aux = elems.next();
+                for(int i = start; i < end; i++){
+                    if(l.get(i).equals(aux)){
+                        l.remove(i);
+                        changed = true;
+                        i--;
+                        end--;
+                    }    
+                }
+            }
+
+            return changed; 
         }
 
         public boolean retainAll(HCollection c) throws NullPointerException, IllegalStateException{ //da verificare
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            return super.retainAll(c);
+            if(c == null) throw new NullPointerException("Collection null");
+            
+            boolean changed = false;
+            
+            for(int i = start; i < end; i++){
+                if(!c.contains(l.get(i))){
+                    l.remove(i);
+                    changed = true;
+                    i--;
+                    end--;
+                }    
+            }
+
+            return changed;
         }
 
 
@@ -417,7 +447,7 @@ public class ListAdapter implements HList {
 
         public HList subList(int fromIndex, int toIndex) throws IndexOutOfBoundsException, IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            if((fromIndex < 0 || toIndex > size() || fromIndex > toIndex)) throw new IndexOutOfBoundsException();
+            if((fromIndex < 0 || toIndex > size() || fromIndex >= toIndex   )) throw new IndexOutOfBoundsException();
             return new LimitedListAdapter(l, fromIndex + start, toIndex + start);
 
         }
@@ -433,7 +463,7 @@ public class ListAdapter implements HList {
 
         public Object[] toArray(Object[] a) throws NullPointerException, IllegalStateException{
             if(modCheck != modCount) throw new IllegalStateException("State modified");
-            if(a == null) throw new NullPointerException("Array null");
+            if(a == null) return this.toArray();
     
             if(a.length >= size()){
                 for(int i = 0; i < size(); i++){
@@ -442,10 +472,6 @@ public class ListAdapter implements HList {
                 return a;
             }
             return toArray();
-        }
-
-        public boolean stateCheck(){
-            return modCheck == modCount;
         }
 
         public String toString(){
@@ -479,16 +505,16 @@ public class ListAdapter implements HList {
         public ListIteratorAdapter(ListAdapter l, int index) throws IndexOutOfBoundsException{
             if(l == null) throw new IllegalArgumentException();
             this.l = l;
-            if(index < 0 || index >= l.size()) throw new IndexOutOfBoundsException();
+            if(index < 0 || index > l.size()) throw new IndexOutOfBoundsException();
             start = 0;
-            end = v.size();
+            end = l.size();
             this.index = index;
         }
 
         public ListIteratorAdapter(ListAdapter l, int fromIndex, int toIndex, int index) throws IndexOutOfBoundsException{
             if(l == null) throw new IllegalArgumentException();
             this.l = l;
-            if(index >= toIndex - fromIndex || index < 0) throw new IndexOutOfBoundsException();
+            if(toIndex <= fromIndex || fromIndex < 0 || toIndex > l.size() || index > toIndex - fromIndex || index < 0 ) throw new IndexOutOfBoundsException();
             start = fromIndex;
             end = toIndex;
             this.index = index + fromIndex;
@@ -496,6 +522,7 @@ public class ListAdapter implements HList {
     
         public void add(Object o){
             l.add(index, o);
+            lastIndex = -1;
             index++;
             end++;
         }
@@ -515,7 +542,7 @@ public class ListAdapter implements HList {
         }
     
         public int nextIndex(){
-            return index; //the index of the element that would be returned by a subsequent call to next, or list size if list iterator is at end of list.
+            return index - start; //the index of the element that would be returned by a subsequent call to next, or list size if list iterator is at end of list.
         }
     
         public Object previous() throws NoSuchElementException{
@@ -526,21 +553,19 @@ public class ListAdapter implements HList {
         }
     
         public int previousIndex(){
-            return index - 1;  //the index of the element that would be returned by a subsequent call to previous, or -1 if list iterator is at beginning of list.
+            return index - 1 - start;  //the index of the element that would be returned by a subsequent call to previous, or -1 if list iterator is at beginning of list.
         }
     
         public void remove() throws IllegalStateException{
             if(lastIndex == -1) throw new IllegalStateException();
             l.remove(lastIndex);
-            end--;
             lastIndex = -1;
-            index--;
+            end--;
         }
     
         public void set(Object o) throws IllegalStateException{
             if(lastIndex == -1) throw new IllegalStateException();
             l.set(lastIndex, o);
-            lastIndex = -1;
         }
     }
 
@@ -548,9 +573,5 @@ public class ListAdapter implements HList {
         return v.toString();
     }
 
-    //da rimuovere dopo testing
-    public int getModCount(){
-        return modCount;
-    }
 }
 

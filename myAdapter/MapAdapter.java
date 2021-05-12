@@ -3,6 +3,8 @@
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import jdk.vm.ci.meta.TriState;
+
 public class MapAdapter implements HMap {
     
     //Variables
@@ -162,7 +164,8 @@ public class MapAdapter implements HMap {
         
         private Hashtable ht;
 
-        public KeySet(Hashtable ht){
+        public KeySet(Hashtable ht) throws NullPointerException{
+            if(ht == null) throw new NullPointerException();
             this.ht = ht;
         }
 
@@ -214,7 +217,7 @@ public class MapAdapter implements HMap {
             return new IteratorAdapter(this);
         }
 
-        public boolean remove(Object o){
+        public boolean remove(Object o) throws NullPointerException{
             if(ht.remove(o) == null)  return false;
             return true;
         }
@@ -267,7 +270,7 @@ public class MapAdapter implements HMap {
 
         public Object[] toArray(Object[] a) throws NullPointerException{
         
-            if(a == null) throw new NullPointerException("Array null");
+            if(a == null) return this.toArray();
     
             if(a.length >= this.size()){
                 Enumeration keys = ht.keys();
@@ -286,7 +289,8 @@ public class MapAdapter implements HMap {
     public class EntrySet implements HSet{
         private Hashtable ht;
 
-        public EntrySet(Hashtable ht){
+        public EntrySet(Hashtable ht) throws NullPointerException{
+            if(ht == null) throw new NullPointerException();
             this.ht = ht;
         }
 
@@ -340,7 +344,7 @@ public class MapAdapter implements HMap {
             return new IteratorAdapter(this);
         }
 
-        public boolean remove(Object o){
+        public boolean remove(Object o) throws NullPointerException{
             if(! (o instanceof EntryAdapter)) return false;
             if(ht.remove(((EntryAdapter)o).getKey()) == null)  return false;
             return true;

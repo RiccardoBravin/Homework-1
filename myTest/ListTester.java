@@ -148,6 +148,25 @@ public class ListTester{
     }
 
     @Test
+    public void containsAllTest(){
+        ListAdapter l1 = new ListAdapter();
+        l1.add(1);
+        l1.add("A");
+
+        assertThrows("La lista non lancia NullPointerException se viene passata una collection null", NullPointerException.class, () -> {l1.containsAll(null);});
+        assertTrue("La lista non contiene una lista vuota", l1.containsAll(new ListAdapter()));
+        assertTrue("La lista non contiene 1", l1.contains(1));
+        assertFalse("La lista contiene '1' quando non è stato inserito", l1.contains("1"));
+        assertFalse("La lista contiene null quando non è stato inserito", l1.contains(null));
+
+        //altri test da aggiungere? 
+
+        //System.out.println(l1);
+    }
+
+
+
+    @Test
     public void equalsTest(){
         ListAdapter l1 = new ListAdapter();
         listFiller(l1, 2);
@@ -466,20 +485,20 @@ public class ListTester{
     @Test
     public void toArrayTest(){
         ListAdapter l1 = new ListAdapter();
-        assertEquals("Il vettore ritornato non è corretto", new Object[0], l1.toArray());
+        assertArrayEquals("Il vettore ritornato non è corretto", new Object[0], l1.toArray());
         
         Object[] arr =  new Object[10];
         for(int i = 0; i < 10; i++) arr[i] = "Test";
         listFiller(l1, 10);
-        assertEquals("Il vettore ritornato non è corretto", arr, l1.toArray());
+        assertArrayEquals("Il vettore ritornato non è corretto", arr, l1.toArray());
 
     }
 
     @Test
     public void toArrayObjectTest(){
         ListAdapter l1 = new ListAdapter();
-        assertEquals("L'array ritornato non è corretto", new Object[0], l1.toArray(new Object[0]));
-        assertEquals("L'array ritornato non è corretto", new Object[0], l1.toArray(null));
+        assertArrayEquals("L'array ritornato non è corretto", new Object[0], l1.toArray(new Object[0]));
+        assertArrayEquals("L'array ritornato non è corretto", new Object[0], l1.toArray(null));
         
         Object[] arr1 =  new Object[11];
         Object[] arr2 =  new Object[11];
@@ -489,10 +508,9 @@ public class ListTester{
         arr1[10] = "x";
         arr2[10] = "x";
         listFiller(l1, 10);
-        assertEquals("L'array ritornato non è corretto", arr1, l1.toArray(arr2));
+        assertArrayEquals("L'array ritornato non è corretto", arr1, l1.toArray(arr2));
 
     }
-
 
     private void listFiller(HCollection l, int number){
         for(int i = 0; i < number; i++)

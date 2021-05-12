@@ -269,8 +269,6 @@ public class ListIteratorAdapter {
         li3.set("XX");
         assertEquals("PreviousIndex non non ritorna Il valore corretto dopo il set XX","XX",li3.previous());
 
-
-
     }
 
 }

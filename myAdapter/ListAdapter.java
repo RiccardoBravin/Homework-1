@@ -72,7 +72,7 @@ public class ListAdapter implements HList {
             }
         }
 
-        return false;
+        return true;
 
     }
 
@@ -176,13 +176,13 @@ public class ListAdapter implements HList {
 
     public boolean retainAll(HCollection c) throws NullPointerException{
         if(c == null) throw new NullPointerException("Collection null");
-        HIterator elems = this.iterator();
         boolean changed = false;
         
-        while(elems.hasNext()){
-            if(!c.contains(elems.next())){
-                elems.remove();
+        for(int i = 0; i < size(); i++){
+            if(!c.contains(get(i))){
+                remove(i);
                 changed = true;
+                i--;
             }
         }
 

@@ -13,5 +13,7 @@ public class TestRunner {
 		{
 			System.out.println("Test OK");
 		}
+
+        System.out.println("Che la forza sia con TEst");
     }
 }

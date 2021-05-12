@@ -301,7 +301,7 @@ public class LimitedListAdapterTester {
 
         ListAdapter sl1 = (ListAdapter)l1.subList(0,1);
 
-        assertThrows("La sottolista non lancia IndexOutOfBoundsException se viene passato un indice non accettabile (1)", IndexOutOfBoundsException.class, () -> {sl1.listIterator(1);});
+        assertThrows("La sottolista non lancia IndexOutOfBoundsException se viene passato un indice non accettabile (2)", IndexOutOfBoundsException.class, () -> {sl1.listIterator(2);});
         assertThrows("La sottolista non lancia IndexOutOfBoundsException se viene passato un indice non accettabile (-1)", IndexOutOfBoundsException.class, () -> {sl1.listIterator(-1);});
         assertNotNull("La sottolista ritorna un valore nullo quando viene chiamato iterator", sl1.iterator());
         l1.add("B");

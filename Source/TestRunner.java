@@ -1,4 +1,4 @@
-package myTest;
+//package myTest;
 
 import myAdapter.*;
 import myTest.*;

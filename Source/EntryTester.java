@@ -1,4 +1,4 @@
-package myTest;
+//package myTest;
 //Internal
 import myAdapter.*;
 import myAdapter.MapAdapter.EntryAdapter;
@@ -26,6 +26,7 @@ public class EntryTester {
         MapAdapter.EntryAdapter e1 = new MapAdapter().new EntryAdapter(null, null);
         MapAdapter.EntryAdapter e2 = new MapAdapter().new EntryAdapter("A", 1);
         assertFalse("Due entry diverse sono ritenute uguali", e1.equals(e2));
+        assertTrue("Una entry è diversa da se stessa", e1.equals(e1));
 
         e1 = new MapAdapter().new EntryAdapter("A", 1);
         assertTrue("Due entry uguali sono ritenute diverse", e1.equals(e2));
@@ -57,9 +58,7 @@ public class EntryTester {
         MapAdapter map1 = new MapAdapter();
         map1.put("A", 1);
 
-        //System.out.println(map1);
-
-        MapAdapter.EntryAdapter e1 = map1.new EntryAdapter("A", 5);
+        MapAdapter.EntryAdapter e1 = map1.new EntryAdapter("A", 1);
         e1.setValue(2);
 
         assertEquals("Il valore non è stato correttamente sostituito nella mappa", 2, map1.get("A"));

@@ -1,4 +1,4 @@
-package myTest;
+//package myTest;
 //Internal
 import myAdapter.*;
 import myAdapter.MapAdapter;
@@ -49,7 +49,6 @@ public class MapTester {
 
         assertEquals("La mappa costruitda con map1 non è identica", map1, map2);
         
-        assertThrows("Il costruttore con mappa nulla non lancia NullPointerException", NullPointerException.class, () -> {new MapAdapter(null);});
     }
 
     @Test
@@ -115,11 +114,9 @@ public class MapTester {
 
 
         map1.clear();
-        assertEquals("La mappa non è della dimensione corretta", 0, map1.size());
         assertFalse("Il valore 1 è stato trovato nonostante la mappa fosse vuota", map1.containsValue(1));
 
         map1.put("A", 1);
-        assertEquals("La mappa non è della dimensione corretta", 1, map1.size());
         assertTrue("Il valore 1 non è stato trovato", map1.containsValue(1));
     }
 
@@ -136,16 +133,16 @@ public class MapTester {
         MapAdapter map1 = new MapAdapter();
         MapAdapter map2 = new MapAdapter();
 
-        assertEquals("Le due mappe risultano diverse quando sono entrambe vuote", map1, map2);
+        assertTrue("Le due mappe risultano diverse quando sono entrambe vuote", map1.equals(map2));
 
         map1.put("A", 1);
         map2.put("A", 1);
-        assertEquals("Le due mappe risultano diverse pur contenendo gli stessi elementi", map1, map2);
+        assertTrue("Le due mappe risultano diverse pur contenendo gli stessi elementi", map1.equals(map2));
 
         map1.put("B", 2);
-        assertNotEquals("Le due mappe risultano uguali pur contenendo elementi diversi", map1, map2);
+        assertFalse("Le due mappe risultano uguali pur contenendo elementi diversi", map1.equals(map2));
 
-        assertNotEquals("La mappa risulta uguale a qualcosa che non implementa HMap", map1, new ListAdapter());
+        assertFalse("La mappa risulta uguale a qualcosa che non implementa HMap", map1.equals(new Object()));
     }
 
 
@@ -162,7 +159,7 @@ public class MapTester {
         assertEquals("get non trova l'elemento appena inserito (B,2)", 2, map1.get("B"));
         assertEquals("get non trova l'elemento inserito precedentemente (A,1)", 1, map1.get("A"));
 
-        map1.remove("A");
+        map1.clear();
         assertNull("get trova il riferimento ad una chiave eliminata", map1.get("A"));
 
     }
@@ -170,6 +167,7 @@ public class MapTester {
     @Test
     public void hashTest(){
         MapAdapter map1 = new MapAdapter();
+        assertEquals("La funzione hash non ritorna il valore atteso (0)", 0, map1.hashCode());
 
         map1.put("A", 1);
         assertEquals("La funzione hash non ritorna il valore atteso (64)", 64, map1.hashCode());
@@ -236,12 +234,12 @@ public class MapTester {
         assertFalse("La mappa in realtà sembra contenere 2 come chiave quando era stata inserito come elemento", map1.containsKey(2));
 
 
-        map1.put("B", 2); // secondo inserimento
+        map1.put(1.4, "B"); // secondo inserimento
 
         assertEquals("La mappa non è della dimensione corretta dopo gli inserimenti", 2, map1.size());
 
-        assertTrue("La mappa non contiene il valore 2 inserito due volte", map1.containsValue(2));
-        assertEquals(2, map1.size());
+        assertTrue("La mappa non contiene il valore 2 inserito due volte", map1.containsValue("B"));
+        assertTrue("La mappa in realtà sembra non contenere effettivamente A come chiave", map1.containsKey(1.4));
 
 
 
@@ -249,12 +247,7 @@ public class MapTester {
         assertFalse("È stato trovato il valore 100 pur essendo stata lanciata l'eccezione per chiave nulla", map1.containsValue(100));
 
         assertThrows("map non ha lanciato eccezioni quando ha ricevuto valore nullo", NullPointerException.class, () -> {map1.put("Z",null);});
-        assertFalse("È stato trovata la chiave Z pur essendo stata lanciata l'eccezione per valore nullo", map1.containsKey("Z"));
-
-        map1.put(1.5, "C");
-        assertTrue("L'inserimento di valori di tipo diverso non funziona", map1.containsValue("C"));
-        assertTrue("L'inserimento di chiavi di tipo diverso non funziona", map1.containsKey(1.5));
-        
+        assertFalse("È stato trovata la chiave Z pur essendo stata lanciata l'eccezione per valore nullo", map1.containsKey("Z"));   
     }
 
     @Test
@@ -273,10 +266,12 @@ public class MapTester {
         assertEquals("La mappa non rimane della stessa dimensione dopo l'aggiunta di una mappa vuota", 1, map1.size());
         assertEquals("Il contenuto della mappa non rimane lo stesso dopo l'aggiunta di una mappa vuota", 1, map1.get("A"));
 
+
         map2.put("B", 2);
+        map2.put("A", 2);
         map1.putAll(map2);
         assertEquals("La dimensione della mappa è diversa da quella attesa dopo l'aggiunta di una mappa con entry diverse ", 2, map1.size());
-        assertEquals("Il contenuto della mappa non è rimasto lo stesso dopo l'aggiunta di una mappa vuota", 1, map1.get("A"));
+        assertEquals("Il contenuto della mappa non è rimasto lo stesso dopo l'aggiunta di una mappa vuota", 2, map1.get("A"));
         assertEquals("Il contenuto della mappa non è rimasto lo stesso dopo l'aggiunta di una mappa vuota", 2, map1.get("B"));
         
 
@@ -288,17 +283,12 @@ public class MapTester {
         MapAdapter map1 = new MapAdapter();
         assertThrows("Map non ha lanciato eccezioni sulla rimozione di chiave nulla", NullPointerException.class, () -> {map1.remove(null);});
 
-        MapAdapter map2 = new MapAdapter();
         map1.put("A", 1);
-        map2.put("A", 1);
-
-        assertEquals("Le due mappe non sono uguali dopo l'inserimento di valori uguali", map1, map2);
         
-        map1.clear();
-        assertEquals("L'oggetto ritornato da remove non è quello atteso (1)", 1, map2.remove("A")); 
-        assertEquals("La mappa pulita e quella a cui è stato rimosso l'unico valore non sono uguali", map1, map2);
+        assertEquals("L'oggetto ritornato da remove non è quello atteso (1)", 1, map1.remove("A"));
+        assertTrue("L'eliminazione di una chiave non ha ridotto la dimensione della mappa", map1.isEmpty());
 
-        assertNull("La rimozione di chiavi non presenti non fornisce null come valore di ritorno", map2.remove("SOS"));
+        assertNull("La rimozione di chiavi non presenti non fornisce null come valore di ritorno", map1.remove("SOS"));
     }
 
 
@@ -321,15 +311,6 @@ public class MapTester {
         MapAdapter map1 = new MapAdapter();
         assertNotNull("La collection ritornata da valued è null", map1.values());
     }
-
-
-    
-
-
-    
-    
-
-    
 
 
     

@@ -1,4 +1,4 @@
-package myTest;
+//package myTest;
 //internal
 import myAdapter.*;
 import myAdapter.MapAdapter.EntrySet;
@@ -73,7 +73,6 @@ public class EntrySetTester {
 
         assertTrue("EntrySet sembra non contenere la lista di entry vuota ", es.containsAll(new ListAdapter()));
         assertThrows("AddAll non lancia NullPointerException passando una lista nulla", NullPointerException.class, () -> {es.containsAll(null);});
-
     }
 
 
@@ -151,6 +150,7 @@ public class EntrySetTester {
         assertTrue("Il remove dice di non aver rimosso elementi da una hashtable con valori", es1.remove(new MapAdapter().new EntryAdapter("A", 1)));
         assertTrue("La hashtable non è vuota dopo il remove", ht1.isEmpty());
 
+        ht1.put("A", 1);
         assertFalse("Il remove dice di aver rimosso una entry con valore non presente", es1.remove(new MapAdapter().new EntryAdapter("A", 2)));
         assertFalse("Il remove dice di aver rimosso una entry con chiave non presente", es1.remove(new MapAdapter().new EntryAdapter("B", 1)));
 

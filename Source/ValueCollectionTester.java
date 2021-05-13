@@ -1,4 +1,4 @@
-package myTest;
+//package myTest;
 //Internal
 import myAdapter.*;
 import myAdapter.MapAdapter.ValueCollection;

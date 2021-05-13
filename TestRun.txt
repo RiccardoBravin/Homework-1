@@ -1,0 +1,38 @@
+C:...\Homework 1\Source> javac -d . .\*.java
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+PS C:...\Homework 1\Source> java myTest.TestRunner
+Inizializzazione esecuzione test
+Esecuzione test MapTester.class
+Esecuzione completata con successo
+Sono stati eseguiti correttamente 16 test su 16 in un tempo di 15ms
+Esecuzione test EntryTester.class
+Esecuzione completata con successo
+Sono stati eseguiti correttamente 5 test su 5 in un tempo di 0ms
+Esecuzione test IteratorTester.class
+Esecuzione completata con successo
+Sono stati eseguiti correttamente 4 test su 4 in un tempo di 0ms
+Esecuzione test EntrySetTester.class
+Esecuzione completata con successo
+Sono stati eseguiti correttamente 16 test su 16 in un tempo di 0ms
+Esecuzione test KeySetTester.class
+Esecuzione completata con successo
+Sono stati eseguiti correttamente 16 test su 16 in un tempo di 0ms
+Esecuzione test ValueCollectionTester.class
+Esecuzione completata con successo
+Sono stati eseguiti correttamente 16 test su 16 in un tempo di 0ms
+Esecuzione test ListTester.class
+Esecuzione completata con successo
+Sono stati eseguiti correttamente 24 test su 24 in un tempo di 16ms
+Esecuzione test LimitedListTester.class
+Esecuzione completata con successo
+Sono stati eseguiti correttamente 23 test su 23 in un tempo di 15ms
+Esecuzione test ListIteratorTester.class
+Esecuzione completata con successo
+Sono stati eseguiti correttamente 10 test su 10 in un tempo di 0ms
+
+
+Sono stati eseguiti un totale di 130 in un tempo pari a 46ms
+
+
+Che la forza sia con TEst

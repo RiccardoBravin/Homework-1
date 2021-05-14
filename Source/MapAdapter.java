@@ -345,7 +345,11 @@ public class MapAdapter implements HMap {
 
         public boolean remove(Object o) throws NullPointerException{
             if(! (o instanceof EntryAdapter)) return false;
+            if(ht.get(((EntryAdapter)o).getKey()) != ((EntryAdapter)o).getValue()) return false;
+            
             if(ht.remove(((EntryAdapter)o).getKey()) == null)  return false;
+
+            
             return true;
         }
 

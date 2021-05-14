@@ -96,9 +96,16 @@ public class ValueCollectionTester {
         ht2.put("B", 2);
         ht2.put("C", 3);
         
-
         assertTrue("Due ValueCollection contenenti le stesse chiavi non sono uguali", vc1.equals(vc2));
 
+        HCollection l = new ListAdapter();
+        MapAdapter m = new MapAdapter();
+        HCollection vals = m.values();
+        l.add("A");
+        m.put("Z", "A");
+
+        assertTrue("test", vals.equals(l));
+        
 
     }
 

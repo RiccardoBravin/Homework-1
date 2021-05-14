@@ -89,6 +89,7 @@ public class ListTester{
         ListAdapter l1 = new ListAdapter();
         
         assertThrows("La lista non lancia NullPointerException quando viene passata un null", NullPointerException.class, () -> {l1.addAll(null);});
+        assertThrows("La lista non lancia NullPointerException quando viene passata un null", NullPointerException.class, () -> {l1.addAll(0, null);});
         assertThrows("La lista non lancia IndexOutOfBoundsException quando viene passato un indice invalido (100)", IndexOutOfBoundsException.class, () -> {l1.addAll(100,l1);});
         assertThrows("La lista non lancia IndexOutOfBoundsException quando viene passato un indice invalido (-1)", IndexOutOfBoundsException.class, () -> {l1.addAll(-1,l1);});
         assertTrue("La stringa non è rimasta vuota dopo aver lanciato errori", l1.isEmpty());
@@ -154,13 +155,14 @@ public class ListTester{
 
         assertThrows("La lista non lancia NullPointerException se viene passata una collection null", NullPointerException.class, () -> {l1.containsAll(null);});
         assertTrue("La lista non contiene una lista vuota", l1.containsAll(new ListAdapter()));
-        assertTrue("La lista non contiene 1", l1.contains(1));
-        assertFalse("La lista contiene '1' quando non è stato inserito", l1.contains("1"));
-        assertFalse("La lista contiene null quando non è stato inserito", l1.contains(null));
+        
+        ListAdapter l2 = new ListAdapter();
+        l2.add(1);
+        assertTrue("La lista non contiene [1]", l1.containsAll(l2));
+        l2.add("1");
+        assertFalse("La lista contiene [1,'1'] ma '1' non era inserito", l1.containsAll(l2));
+        assertTrue("La lista non contiene se stessa", l1.containsAll(l1));
 
-        //altri test da aggiungere? 
-
-        //System.out.println(l1);
     }
 
 
@@ -175,14 +177,16 @@ public class ListTester{
 
         ListAdapter l2 = new ListAdapter();
         listFiller(l2, 2);
-        assertNotEquals("Le due mappe risultano uguali pur non essendolo", l1, l2);
+        assertNotEquals("Le due liste risultano uguali pur non essendolo", l1, l2);
         
         l2.add(1);
         l2.add(2);
         l2.add(3);
-        assertEquals("Le due mappe risultano diverse pur contenendo gli stessi elementi", l1, l2);
+        assertEquals("Le due liste risultano diverse pur contenendo gli stessi elementi", l1, l2);
         
-        assertEquals("Le mappe sono ritenute uguali pur avendo hashcode diversi", l1.hashCode(), l2.hashCode());
+        assertEquals("Le liste sono ritenute uguali pur avendo hashcode diversi", l1.hashCode(), l2.hashCode());
+
+        assertFalse("La lista risulta uguale ad un oggetto qualsiasi", l1.equals(new Object()));
         
         //System.out.println(l1);
     }
@@ -197,11 +201,11 @@ public class ListTester{
         l1.add("x");
         assertThrows("La lista vuota lancia IndexOutOfBoundsException se viene richesto un valore ad indici non esistenti (-1)", IndexOutOfBoundsException.class, () -> {l1.get(-1);});
         assertThrows("La lista vuota lancia IndexOutOfBoundsException se viene richesto un valore ad indici non esistenti (1)", IndexOutOfBoundsException.class, () -> {l1.get(1);});
-        assertEquals("La lista sembra non contenere x al posto corretto", "x", l1.get(0));
+        assertEquals("Sembra che get non ritorni la posizione corretta di x", "x", l1.get(0));
 
         listFiller(l1, 10);
         l1.add(4, "xx");
-        assertEquals("La lista sembra non contenere xx al posto corretto", "xx", l1.get(4));
+        assertEquals("Sembra che get non ritorni la posizione corretta di xx", "xx", l1.get(4));
         
         //System.out.println(l1);
     }
@@ -305,6 +309,7 @@ public class ListTester{
         l1.add(null);
         assertThrows("L'inizializzazione dell'iteratore in una posizione non disponibile (-1) non lancia IndexOutOfBoundsException", IndexOutOfBoundsException.class, () -> {l1.listIterator(-1);});
         assertNotNull("L'inizializzazione dell'iteratore in posizione 0 ritorna null", l1.listIterator(0));
+        assertNotNull("L'inizializzazione dell'iteratore in posizione 0 ritorna null", l1.listIterator());
         assertThrows("L'inizializzazione dell'iteratore in una posizione non disponibile (1) non lancia IndexOutOfBoundsException", IndexOutOfBoundsException.class, () -> {l1.listIterator(1);});
         
         //Altri test?
@@ -399,6 +404,8 @@ public class ListTester{
         assertTrue("Remove all sembra non aver apportato modifiche alla lista pur contenendo elementi della collection passata", l1.removeAll(l2));
         assertEquals("La lista ha eliminato elementi quando non doveva farlo", 1, l1.size());
         assertEquals("La lista non contiene l'lemento rimanente corretto", "C", l1.get(0));
+
+        assertFalse("Remove di una lista vuota effettua delle rimozioni", l1.removeAll(new ListAdapter()));
 
     }
 

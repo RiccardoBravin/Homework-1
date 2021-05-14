@@ -88,6 +88,8 @@ public class LimitedListTester {
         l1.add("A");
         ListAdapter sl1 = (ListAdapter)l1.subList(0,1);
 
+        assertThrows("La sottolistalista non lancia NullPointerException se viene passata una collection null",NullPointerException.class, () -> {sl1.addAll(0,null);});
+
         assertThrows("La sottolistalista non lancia IndexOutOfBoundsException se viene passato un indice non valido (-1)",IndexOutOfBoundsException.class, () -> {sl1.addAll(-1,l1);});
         assertThrows("La sottolistalista non lancia IndexOutOfBoundsException se viene passato un indice non valido (5)",IndexOutOfBoundsException.class, () -> {sl1.addAll(5,l1);});
 
@@ -115,7 +117,6 @@ public class LimitedListTester {
 
         assertFalse("addall dice di aver effettuato modifiche pur avendo passato una lista vuota", sl3.addAll(0, l3));
 
-        //System.out.println(l1);
     }
 
     @Test
@@ -270,6 +271,8 @@ public class LimitedListTester {
         sl1.clear();
         assertThrows("clear sulla stessa lista può venir utilizzato dopo modifiche senza lanciare IllegalStateException",IllegalStateException.class, () -> {sl1.isEmpty();});
     }
+
+    //Iterator non viene testato perchè richiama listIterator
 
     @Test
     public void lastIndexTest(){

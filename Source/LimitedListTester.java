@@ -368,7 +368,7 @@ public class LimitedListTester {
 
         ListAdapter sl1 = (ListAdapter)l1.subList(0,1);
         assertThrows("removeAll non lancia NullPointerException se viene passata una collection nulla",NullPointerException.class, () -> {sl1.removeAll(null);});
-        assertTrue("Removeall dice di non aver rimosso elementi pur avendo modificato la sottolista", sl1.removeAll(l1));
+        assertTrue("Removeall dice di non aver rimosso elementi pur avendo modificato la sottolista", sl1.removeAll(sl1));
         assertTrue("La rimozione dalla sottolista non ha avuto effetto sulla lista madre", l1.isEmpty());
 
         l1.add("A");

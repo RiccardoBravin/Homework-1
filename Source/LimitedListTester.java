@@ -1,4 +1,4 @@
-//package myTest;
+package myTest;
 //Internal
 import myAdapter.ListAdapter;
 import myAdapter.ListAdapter.LimitedListAdapter;

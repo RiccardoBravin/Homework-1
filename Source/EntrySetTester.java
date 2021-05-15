@@ -1,4 +1,4 @@
-//package myTest;
+package myTest;
 //internal
 import myAdapter.*;
 import myAdapter.MapAdapter.EntrySet;

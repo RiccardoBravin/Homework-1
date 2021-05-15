@@ -1,7 +1,7 @@
 C:...\Homework 1\Source> javac -d . .\*.java
 Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
-PS C:...\Homework 1\Source> java myTest.TestRunner
+C:...\Homework 1\Source> java myTest.TestRunner
 Inizializzazione esecuzione test
 Esecuzione test MapTester.class
 Esecuzione completata con successo

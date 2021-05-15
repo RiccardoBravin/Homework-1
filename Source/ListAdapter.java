@@ -1,4 +1,4 @@
-//package myAdapter;
+package myAdapter;
 
 import java.util.NoSuchElementException;
 import java.util.Vector;

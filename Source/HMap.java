@@ -1,4 +1,4 @@
-//package myAdapter;
+package myAdapter;
 
 /**
  * An object that maps keys to values. A map cannot contain duplicate keys; each key can map to at most one value.

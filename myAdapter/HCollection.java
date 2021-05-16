@@ -51,8 +51,8 @@ public interface HCollection {
      * @param c collection to be checked for containment in this collection.
      * @return true if this collection contains all of the elements in the specified collection
      * @throws ClassCastException if the types of one or more elements in the specified collection are incompatible with this collection (optional).
-     * @throws NullPointerExceptionif if the specified collection is null.
-     * @throws NullPointerExceptionif the specified collection contains one or more null elements and this collection does not support null elements (optional).
+     * @throws NullPointerException if if the specified collection is null.
+     * @throws NullPointerException if the specified collection contains one or more null elements and this collection does not support null elements (optional).
      */
     boolean	containsAll(HCollection c) throws ClassCastException, NullPointerException;
 

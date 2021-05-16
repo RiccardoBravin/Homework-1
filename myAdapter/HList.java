@@ -11,7 +11,7 @@ public interface HList extends HCollection {
      * @throws ClassCastException if the class of the specified element prevents it from being added to this list.
      * @throws NullPointerException if the specified element is null and this list does not support null elements.
      * @throws IllegalArgumentException if some aspect of the specified element prevents it from being added to this list.
-     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index > size()).
+     * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt; size()).
      */
     void add(int index, Object Element) throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException, IndexOutOfBoundsException;
 
@@ -45,12 +45,12 @@ public interface HList extends HCollection {
      * 
      * @param index index at which to insert first element from the specified collection.
      * @param c elements to be inserted into this list.
-     * @return
+     * @return return true if list dimension change, false otherwise
      * @throws UnsupportedOperationException if the addAll method is not supported by this list.
      * @throws ClassCastException if the class of one of elements of the specified collection prevents it from being added to this list.
      * @throws NullPointerException if the specified collection contains one or more null elements and this list does not support null elements, or if the specified collection is null.
      * @throws IllegalArgumentException if some aspect of one of elements of the specified collection prevents it from being added to this list.
-     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index > size()).
+     * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt; size()).
      */
     boolean addAll(int index, HCollection c) throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException, IndexOutOfBoundsException;
 
@@ -159,7 +159,7 @@ public interface HList extends HCollection {
      * 
      * @param index index of first element to be returned from the list iterator (by a call to the next method).
      * @return a list iterator of the elements in this list (in proper sequence), starting at the specified position in this list.
-     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index > size()).
+     * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt; size()).
      */
     HListIterator listIterator(int index) throws IndexOutOfBoundsException;
 
@@ -169,7 +169,7 @@ public interface HList extends HCollection {
      * @param index the index of the element to removed.
      * @return the element previously at the specified position.
      * @throws UnsupportedOperationException if the remove method is not supported by this list.
-     * @throws IndexOutOfBoundException if the index is out of range (index < 0 || index >= size())
+     * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt;= size())
      */
     Object remove(int index) throws UnsupportedOperationException, IndexOutOfBoundsException;
 
@@ -218,7 +218,7 @@ public interface HList extends HCollection {
      * @throws ClassCastException if the class of the specified element prevents it from being added to this list.
      * @throws NullPointerException if the specified element is null and this list does not support null elements.
      * @throws IllegalArgumentException if some aspect of the specified element prevents it from being added to this list.
-     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= size()).
+     * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt;= size()).
      */
     Object set(int index, Object element) throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException, IndexOutOfBoundsException;
     
@@ -241,7 +241,7 @@ public interface HList extends HCollection {
      * @param fromIndex low endpoint (inclusive) of the subList.
      * @param toIndex high endpoint (exclusive) of the subList.
      * @return a view of the specified range within this list.
-     * @throws IndexOutOfBoundsException for an illegal endpoint index value (fromIndex < 0 || toIndex > size || fromIndex > toIndex).
+     * @throws IndexOutOfBoundsException for an illegal endpoint index value (fromIndex &lt; 0 || toIndex &gt; size || fromIndex &gt; toIndex).
      */
     HList subList(int fromIndex, int toIndex) throws IndexOutOfBoundsException;
 
